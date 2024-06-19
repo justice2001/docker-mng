@@ -1,20 +1,13 @@
-import { StackStatus } from "../types/Stacks";
+import { Stack } from "../types/Stacks";
 import { ProList, ProListProps } from "@ant-design/pro-components";
-import { Badge, Button, Flex, Space, Tag } from "antd";
-import { LinkOutlined } from "@ant-design/icons";
+import { Button, Flex, Input, Segmented, Space, Tag } from "antd";
+import { AppstoreOutlined, BarsOutlined, LinkOutlined, SearchOutlined } from "@ant-design/icons";
 import Avatar from "antd/es/avatar/avatar";
 import StatusBadge from "../component/StatusBadge";
 import { StackStatusMap, stringToColor, textColor } from "../utils/stack-utils";
-
-type Stack = {
-    name: string;
-    icon: string;
-    tags: string[];
-    endpoint: string;
-    state: StackStatus;
-    envFile: string;
-    composeFile: string;
-};
+import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Plus } from "@icon-park/react";
 
 const demoData: Stack[] = [
     {
@@ -38,6 +31,8 @@ const demoData: Stack[] = [
 ];
 
 const ComposeView: React.FC = () => {
+    const navigate = useNavigate();
+
     const gridView:ProListProps<Stack> = {
         grid: {
             gutter: 16,
@@ -45,21 +40,21 @@ const ComposeView: React.FC = () => {
         },
         metas: {
             title: {
-                dataIndex: "name"
+                render: (_dom, row) => (
+                    <>
+                        <div onClick={() => navigate(`/compose/${row.name}`)}>{row.name}</div>
+                        <StatusBadge map={StackStatusMap} value={row.state} />
+                    </>
+                )
             },
             avatar: {
                 dataIndex: "icon",
-                render: (dom, row) => (
+                render: (_dom, row) => (
                     <Avatar src={row.icon} style={{ marginRight: 8 }} />
                 )
             },
-            subTitle: {
-                render: (dom, row) => (
-                    <StatusBadge map={StackStatusMap} value={row.state} />
-                )
-            },
             content: {
-                render: (dom, row) => {
+                render: (_dom, row) => {
                     return (<Space direction={"vertical"}>
                         <Space>
                             <LinkOutlined />
@@ -91,6 +86,17 @@ const ComposeView: React.FC = () => {
                 headerTitle={"堆栈列表"}
                 dataSource={demoData}
                 {...gridView}
+                rowKey={"name"}
+                toolBarRender={() => [
+                    <Button type={"primary"} icon={<Plus />}>添加</Button>,
+                    <Input prefix={<SearchOutlined />} placeholder={"Search"}/>,
+                    <Segmented
+                        options={[
+                            { label: '', value: 'List', icon: <BarsOutlined /> },
+                            { label: '', value: 'Kanban', icon: <AppstoreOutlined /> },
+                        ]}
+                    />
+                ]}
             />
         </>
     );

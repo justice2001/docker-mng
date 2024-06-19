@@ -2,7 +2,6 @@ import React from "react";
 import { ProList } from "@ant-design/pro-components";
 import {
     ApiOutlined,
-    CloudServerOutlined,
     CodeOutlined,
     DeleteOutlined,
     DockerOutlined,
@@ -118,7 +117,7 @@ const nodeList: React.FC = () => {
                         },
                     },
                     actions: {
-                        render: (text, row) => [
+                        render: () => [
                             <Button
                                 type={"link"}
                                 icon={<CodeOutlined />}

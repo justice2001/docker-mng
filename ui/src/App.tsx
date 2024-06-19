@@ -8,6 +8,7 @@ import Images from "./views/Images";
 import Backups from "./views/Backups";
 import AppStore from "./views/AppStore";
 import { SettingOutlined } from "@ant-design/icons";
+import ComposeDetail from "./views/ComposeDetail.tsx";
 
 const routeConfig = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const routeConfig = createBrowserRouter([
             {
                 path: "/compose",
                 element: <Compose />
+            },
+            {
+              path: "/compose/:id",
+              element: <ComposeDetail />
             },
             {
                 path: "/images",
