@@ -10,6 +10,6 @@ export type NodeInfo = {
 export type NodeData = {
     nodeName: string;
     nodeIp: string;
-    nodeMngPort: string;
+    nodeMngPort: number;
     nodeInfo: NodeInfo;
 }

@@ -19,8 +19,6 @@ export default class RemoteRequest {
         return new Promise((resolve, reject) => {
             const socket = this.remoteServer.getSocket();
 
-            console.log(socket)
-
             // Timeout
             setTimeout(() => {
                 reject({ err: "request timeout" });

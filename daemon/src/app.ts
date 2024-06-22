@@ -3,6 +3,7 @@ import * as http from "node:http";
 import io from 'socket.io';
 import { IPacket } from "../../common/types/Community";
 import { NodeInfo } from "../../common/types/daemon";
+import { navigation } from "./service/router";
 
 const app = new Koa();
 
@@ -23,22 +24,8 @@ export const socketServer = new io.Server(server, {
 
 socketServer.on("connect", (socket) => {
     console.log("USER CONNECTED!")
-    socket.on("info", (data: IPacket<any>) => {
-        const res: IPacket<NodeInfo> = {
-            event: "info",
-            data: {
-                cpu: "2C",
-                memory: "10GB",
-                disk: "100GB",
-                dockerVersion: "20.10.0",
-                daemonVersion: "1.0.0",
-                nodeStatus: "running"
-            },
-            uuid: data.uuid,
-            ok: true
-        }
-        socket.emit("info", res)
-    })
+
+    navigation(socket);
 })
 
 server.listen(3001);

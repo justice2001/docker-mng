@@ -15,6 +15,10 @@ class RemoteManage {
     async getServer(uuid: string) {
         return this.map.get(uuid)
     }
+
+    async getAllServers() {
+        return this.map;
+    }
 }
 
 export default new RemoteManage();

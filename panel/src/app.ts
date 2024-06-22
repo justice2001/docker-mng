@@ -1,16 +1,15 @@
 import Koa from 'koa';
 import bodyParser from 'koa-body';
-import router from "./router";
-import { initializePanel } from "./core/panel-initial";
 import RemoteManage from "./services/remote-manage";
 import * as process from "node:process";
+import { mountRouters } from "./router";
 
 async function main() {
     const app: Koa = new Koa();
 
     app.use(bodyParser());
 
-    app.use(router.routes());
+    mountRouters(app);
 
     await RemoteManage.initialize();
 
@@ -21,6 +20,9 @@ async function main() {
         console.log("App listening on port " + port);
     });
 }
+
+console.log("Docker Manager version 1.0.0")
+console.log("Daemon Version 1.0.0")
 
 main().catch(err => {
     console.log(err)

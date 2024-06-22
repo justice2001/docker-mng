@@ -11,6 +11,9 @@ dependencies:
   '@types/koa-router':
     specifier: ^7.4.8
     version: 7.4.8
+  events:
+    specifier: ^3.3.0
+    version: 3.3.0
   koa:
     specifier: ^2.15.3
     version: 2.15.3
@@ -447,6 +450,11 @@ packages:
 
   /escape-html@1.0.3:
     resolution: {integrity: sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==}
+    dev: false
+
+  /events@3.3.0:
+    resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
+    engines: {node: '>=0.8.x'}
     dev: false
 
   /formidable@2.1.2:
