@@ -1,6 +1,6 @@
 import Router from "koa-router";
 import Koa from "koa";
-import nodeRouter from "./node-router";
+import nodeRouter from "./node_router";
 import overviewRouter from "./overview_routers";
 
 export function mountRouters(app: Koa<Koa.DefaultState, Koa.DefaultContext>) {

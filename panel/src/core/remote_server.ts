@@ -1,6 +1,6 @@
 import { NodeData } from "../../../common/types/daemon";
 import { io, Socket } from "socket.io-client";
-import RemoteRequest from "../services/remote-request";
+import RemoteRequest from "../services/remote_request";
 
 /**
  * 远程服务器，用于连接 daemon，并向 daemon 发送指令
@@ -9,12 +9,14 @@ export default class RemoteServer {
     private readonly address: string;
     private readonly port: number;
     private readonly token: string;
+    private readonly name: string;
 
     private serverInfo: NodeData | null = null;
 
     private readonly socket: Socket;
 
-    constructor(address: string, port: number, token: string, https: boolean = false) {
+    constructor(name: string, address: string, port: number, token: string, https: boolean = false) {
+        this.name = name;
         this.address = address;
         this.port = port;
         this.token = token;
@@ -27,11 +29,12 @@ export default class RemoteServer {
             new RemoteRequest(this).request("info", {}).then(res => {
                 console.debug(`server ${this.port} info: ${JSON.stringify(res)}`)
                 this.serverInfo = {
-                    nodeName: "node-1",
+                    nodeName: name,
                     nodeIp: address,
                     nodeMngPort: port,
                     nodeInfo: res
                 };
+                this.serverInfo.nodeInfo.nodeStatus = "connected";
             });
         });
     }

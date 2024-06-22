@@ -1,6 +1,6 @@
 import Router from "koa-router";
-import RemoteManage from "../services/remote-manage";
-import RemoteRequest from "../services/remote-request";
+import RemoteManage from "../services/remote_manage";
+import RemoteRequest from "../services/remote_request";
 
 const nodeRouter = new Router({prefix: "/nodes"});
 

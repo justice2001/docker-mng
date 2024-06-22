@@ -4,7 +4,7 @@ import { Space } from "antd";
 import NodeList from "../component/home/NodeList";
 import axios from "axios";
 import RingChart from "../component/RingChart.tsx";
-import { io } from "socket.io-client";
+import { NodeData } from "../../../common/types/daemon.ts";
 
 type ResourceStat = {
     cpu: number;
@@ -20,20 +20,16 @@ const HomeView: React.FC = () => {
         disk: 0,
     });
 
-    useEffect(() => {
-        setInterval(() => {
-            axios.get("/api/overview").then(r => {
-                console.log(r)
-                setResStat({
-                    cpu: r.data.cpuUsage,
-                    memory: r.data.memUsage
-                })
-            });
-        }, 2000)
+    const [servers, setServers] = React.useState<NodeData[]>([]);
 
-        const socket = io("http://localhost:3001");
-        socket.on("connect", () => {
-            console.log("connected")
+    useEffect(() => {
+        axios.get("/api/overview").then(r => {
+            console.log(r)
+            setResStat({
+                cpu: r.data.cpuUsage,
+                memory: r.data.memUsage
+            });
+            setServers(r.data.servers);
         });
 
     }, [])
@@ -113,7 +109,7 @@ const HomeView: React.FC = () => {
                     </StatisticCard.Group>
                 </ProCard>
                 <ProCard title={"节点列表"} bordered headerBordered>
-                    <NodeList />
+                    <NodeList lists={servers} />
                 </ProCard>
             </Space>
         </>

@@ -1,4 +1,4 @@
-import RemoteServer from "../core/remote-server";
+import RemoteServer from "../core/remote_server";
 import { IPacket } from "../../../common/types/Community";
 
 export default class RemoteRequest {

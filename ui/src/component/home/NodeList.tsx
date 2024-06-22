@@ -11,6 +11,7 @@ import { Badge, Button, Space } from "antd";
 import ChipsetOutlined from "../../icon/ChipsetOutlined";
 import MemoryOutlined from "../../icon/MemoryOutlined";
 import ServerOutlined from "../../icon/ServerOutlined";
+import { NodeData, NodeInfo } from "../../../../common/types/daemon.ts";
 
 const statusMap: Record<string, {
     status: "success" | "default" | "processing" | "error" | "warning";
@@ -34,56 +35,15 @@ const statusMap: Record<string, {
     }
 };
 
-type NodeInfo = {
-    cpu: string;
-    memory: string;
-    disk: string;
-    dockerVersion: string;
-    daemonVersion: string;
-    nodeStatus: string;
+type NodeListProps = {
+    lists: NodeData[]
 }
 
-type NodeData = {
-    nodeName: string;
-    nodeIp: string;
-    nodeMngPort: string;
-    nodeInfo: NodeInfo;
-}
-
-const demoData: NodeData[] = [
-    {
-        nodeName: "Services-Node",
-        nodeIp: "10.0.0.28",
-        nodeMngPort: "20000",
-        nodeInfo: {
-            cpu: "2C4T",
-            memory: "16GB",
-            disk: "128GB",
-            dockerVersion: "1.23.5",
-            daemonVersion: "1.0.0",
-            nodeStatus: "connected"
-        },
-    },
-    {
-        nodeName: "Lab-Node",
-        nodeIp: "10.0.0.27",
-        nodeMngPort: "20000",
-        nodeInfo: {
-            cpu: "2C2T",
-            memory: "8GB",
-            disk: "32GB",
-            dockerVersion: "1.23.5",
-            daemonVersion: "1.0.0",
-            nodeStatus: "disconnected"
-        }
-    }
-];
-
-const nodeList: React.FC = () => {
+const nodeList: React.FC<NodeListProps> = (props: NodeListProps) => {
     return (
         <>
             <ProList<NodeData>
-                dataSource={demoData}
+                dataSource={props.lists}
                 metas={{
                     avatar: {
                         render: () => <ServerOutlined style={{ fontSize: 22, color: "#1D63ED" }} />
