@@ -31,4 +31,10 @@
 
 ### Daemon / Mng
 
-- 正在规划
+- Koa
+- Socket.io
+- systeminformation
+
+## 鸣谢
+
+- MCSManager：该项目的部分代码与架构设计参考了该项目

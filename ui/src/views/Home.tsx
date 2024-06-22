@@ -1,10 +1,43 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ProCard, StatisticCard } from "@ant-design/pro-components";
 import { Space } from "antd";
-import { Tiny } from "@ant-design/charts";
 import NodeList from "../component/home/NodeList";
+import axios from "axios";
+import RingChart from "../component/RingChart.tsx";
+import { io } from "socket.io-client";
+
+type ResourceStat = {
+    cpu: number;
+    memory: number;
+    disk?: number;
+}
 
 const HomeView: React.FC = () => {
+
+    const [resStat, setResStat] = React.useState<ResourceStat>({
+        cpu: 0,
+        memory: 0,
+        disk: 0,
+    });
+
+    useEffect(() => {
+        setInterval(() => {
+            axios.get("/api/overview").then(r => {
+                console.log(r)
+                setResStat({
+                    cpu: r.data.cpuUsage,
+                    memory: r.data.memUsage
+                })
+            });
+        }, 2000)
+
+        const socket = io("http://localhost:3001");
+        socket.on("connect", () => {
+            console.log("connected")
+        });
+
+    }, [])
+
     return (
         <>
             <Space direction="vertical" style={{ width: "100%" }}>
@@ -70,12 +103,12 @@ const HomeView: React.FC = () => {
                         <StatisticCard.Divider />
                         <StatisticCard statistic={{
                             title: "CPU 占用率",
-                            value: "20%"
-                        }} chart={<Tiny.Ring percent={0.2} width={60} height={60} color={[ "#E8EFF5", "#40de00" ]} />} chartPlacement={"left"}/>
+                            value: (resStat.cpu * 100).toFixed(2) + "%"
+                        }} chart={<RingChart data={resStat.cpu} width={50} /> } chartPlacement={"left"}/>
                         <StatisticCard statistic={{
                             title: "内存占用率",
-                            value: "60%"
-                        }} chart={<Tiny.Ring percent={0.6} width={60} height={60} color={[ "#E8EFF5", "#ffc245" ]} />}
+                            value: (resStat.memory * 100).toFixed(2) + "%"
+                        }} chart={<RingChart data={resStat.memory} color={[ "#ffc245", "#E8EFF5" ]} width={50} />}
                         chartPlacement={"left"}/>
                     </StatisticCard.Group>
                 </ProCard>
