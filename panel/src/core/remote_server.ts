@@ -14,6 +14,7 @@ export default class RemoteServer {
     private serverInfo: NodeData | null = null;
 
     private readonly socket: Socket;
+    private errCount: number = 0;
 
     constructor(name: string, address: string, port: number, token: string, https: boolean = false) {
         this.name = name;
@@ -22,9 +23,13 @@ export default class RemoteServer {
         this.token = token;
         const socket = io(`${https ? "https" : "http"}://${this.address}:${this.port}`);
         this.socket = socket;
+
+        this.setConnectStatus("registered");
+
         socket.on("connect", () => {
             console.log("connected to server: " + this.address);
             socket.emit("auth", this.token);
+            this.errCount = 0;
 
             new RemoteRequest(this).request("info", {}).then(res => {
                 console.debug(`server ${this.port} info: ${JSON.stringify(res)}`)
@@ -37,6 +42,42 @@ export default class RemoteServer {
                 this.serverInfo.nodeInfo.nodeStatus = "connected";
             });
         });
+
+        socket.on("connect_error", () => {
+            this.setConnectStatus("registered");
+
+            console.log(`connect_error (${this.address}), error count: ${this.errCount++}`);
+            if (this.errCount > 5) {
+                console.log(`Error count limited! disconnecting (${this.address})`)
+                this.setConnectStatus("disconnected")
+                socket.disconnect()
+            }
+        })
+
+        socket.on("disconnect", () => {
+            this.setConnectStatus("disconnected")
+            console.log("disconnected")
+        })
+    }
+
+    setConnectStatus(status: string) {
+        if (this.serverInfo) {
+            this.serverInfo.nodeInfo.nodeStatus = status;
+        } else {
+            this.serverInfo = {
+                nodeName: this.name,
+                nodeIp: this.address,
+                nodeMngPort: this.port,
+                nodeInfo: {
+                    cpu: "0 Cores",
+                    memory: "0.00 GB",
+                    disk: "0.00 GB",
+                    dockerVersion: "00.0.0",
+                    daemonVersion: "0.0.0",
+                    nodeStatus: status
+                }
+            };
+        }
     }
 
     getSocket() {

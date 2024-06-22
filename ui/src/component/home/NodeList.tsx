@@ -27,7 +27,7 @@ const statusMap: Record<string, {
     },
     "registered": {
         status: "processing",
-        text: "已注册，但从未链接"
+        text: "连接中"
     },
     "performance": {
         status: "warning",
