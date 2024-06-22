@@ -17,6 +17,8 @@ overviewRouter.get("/", async (ctx) => {
     ctx.body = {
         cpuUsage: 0,
         memUsage: 0,
+        serverCount: await remoteManage.serverCount(),
+        activeServerCount: await remoteManage.activeCount(),
         servers
     }
 })

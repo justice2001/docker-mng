@@ -4,14 +4,14 @@ import {
     ApiOutlined,
     CodeOutlined,
     DeleteOutlined,
-    DockerOutlined,
-    ReloadOutlined
+    DockerOutlined, ReloadOutlined
 } from "@ant-design/icons";
-import { Badge, Button, Space } from "antd";
+import { Badge, Button, Popconfirm, Space } from "antd";
 import ChipsetOutlined from "../../icon/ChipsetOutlined";
 import MemoryOutlined from "../../icon/MemoryOutlined";
 import ServerOutlined from "../../icon/ServerOutlined";
 import { NodeData, NodeInfo } from "../../../../common/types/daemon.ts";
+import ApiRequest from "../../api/api-request.ts";
 
 const statusMap: Record<string, {
     status: "success" | "default" | "processing" | "error" | "warning";
@@ -36,10 +36,27 @@ const statusMap: Record<string, {
 };
 
 type NodeListProps = {
-    lists: NodeData[]
+    lists: NodeData[];
+    onRefresh: () => void;
 }
 
 const nodeList: React.FC<NodeListProps> = (props: NodeListProps) => {
+    const reconnect = (endpoint: string) => {
+        ApiRequest.put(`/nodes/reconnect/${endpoint}`).then(res => {
+            if (res.data.ok) {
+                props.onRefresh();
+            }
+        })
+    }
+
+    const deleteNode = (endpoint: string) => {
+        ApiRequest.delete(`/nodes/${endpoint}`).then(res => {
+            if (res.data.ok) {
+                props.onRefresh();
+            }
+        })
+    }
+
     return (
         <>
             <ProList<NodeData>
@@ -77,27 +94,41 @@ const nodeList: React.FC<NodeListProps> = (props: NodeListProps) => {
                         },
                     },
                     actions: {
-                        render: () => [
-                            <Button
-                                type={"link"}
-                                icon={<CodeOutlined />}
-                            >
-                                终端
-                            </Button>,
-                            <Button
-                                type={"link"}
-                                icon={<ReloadOutlined />}
-                            >
-                                重新连接
-                            </Button>,
-                            <Button
-                                type={"link"}
-                                icon={<DeleteOutlined />}
-                                danger
-                            >
-                                删除节点
-                            </Button>,
-                        ]
+                        render: (_dom, row) => {
+                            let list = []
+
+                            if (row.nodeInfo.nodeStatus === "connected") {
+                                list.push(
+                                    <Button
+                                        type={"link"}
+                                        icon={<CodeOutlined />}
+                                    >
+                                        终端
+                                    </Button>
+                                );
+                            }
+
+                            list = list.concat([
+                                <Button
+                                    type={"link"}
+                                    icon={<ReloadOutlined />}
+                                    onClick={() => reconnect(row.nodeName)}
+                                >
+                                    重新连接
+                                </Button>,
+                                <Popconfirm title={"确定删除节点？"} onConfirm={() => deleteNode(row.nodeName)}>
+                                    <Button
+                                        type={"link"}
+                                        icon={<DeleteOutlined />}
+                                        danger
+                                    >
+                                        删除节点
+                                    </Button>
+                                </Popconfirm>,
+                            ])
+
+                            return list;
+                        }
                     }
                 }}
             >

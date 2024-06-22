@@ -80,11 +80,23 @@ export default class RemoteServer {
         }
     }
 
+    reconnect() {
+        if (this.socket.connected) {
+            return;
+        }
+        this.socket.connect();
+        this.setConnectStatus("registered");
+    }
+
     getSocket() {
         return this.socket;
     }
 
     getServerInfo() {
         return this.serverInfo;
+    }
+
+    disconnect() {
+        this.socket.disconnect();
     }
 }

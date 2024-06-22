@@ -26,4 +26,40 @@ nodeRouter.get("/info/:endpoint", async (ctx) => {
     }
 })
 
+nodeRouter.post("/", async (ctx) => {
+    try {
+        await RemoteManage.addServer(ctx.request.body);
+        ctx.body = {
+            ok: true
+        }
+    } catch (e: any) {
+        ctx.status = 500;
+        ctx.body = {
+            message: e.message
+        }
+    }
+})
+
+nodeRouter.put("/reconnect/:endpoint", async (ctx) => {
+    const server = await RemoteManage.getServer(ctx.params.endpoint);
+    if (!server) {
+        ctx.status = 404;
+        ctx.body = {
+            message: "server not found"
+        }
+        return;
+    }
+    server.reconnect();
+    ctx.body = {
+        ok: true
+    }
+});
+
+nodeRouter.delete("/:endpoint", async (ctx) => {
+    await RemoteManage.removeServer(ctx.params.endpoint);
+    ctx.body = {
+        ok: true
+    }
+})
+
 export default nodeRouter;

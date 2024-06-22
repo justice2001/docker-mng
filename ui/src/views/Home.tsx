@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
 import { ProCard, StatisticCard } from "@ant-design/pro-components";
-import { Space } from "antd";
+import { Button, Space } from "antd";
 import NodeList from "../component/home/NodeList";
-import axios from "axios";
 import RingChart from "../component/RingChart.tsx";
 import { NodeData } from "../../../common/types/daemon.ts";
+import apiRequest from "../api/api-request.ts";
+import { PlusOutlined } from "@ant-design/icons";
+import ServerAddModel, { ServerAddData } from "../component/home/ServerAddModel.tsx";
+import ApiRequest from "../api/api-request.ts";
 
 type ResourceStat = {
     cpu: number;
@@ -22,17 +25,40 @@ const HomeView: React.FC = () => {
 
     const [servers, setServers] = React.useState<NodeData[]>([]);
 
+    const [serverCount, setServerCount] = React.useState<{
+        count: number,
+        active: number
+    }>({ count: 0, active: 0 });
+
+    const [modalVisible, setModalVisible] = React.useState<boolean>(false);
+
     useEffect(() => {
-        axios.get("/api/overview").then(r => {
+        loadData();
+    }, [])
+
+    const loadData = () => {
+        apiRequest.get("overview").then(r => {
             console.log(r)
             setResStat({
                 cpu: r.data.cpuUsage,
                 memory: r.data.memUsage
             });
             setServers(r.data.servers);
+            setServerCount({
+                count: r.data.serverCount,
+                active: r.data.activeServerCount
+            });
         });
+    }
 
-    }, [])
+    const addServer = (server: ServerAddData) => {
+        ApiRequest.post("/nodes", server).then(res => {
+            if (res.data.ok) {
+                setModalVisible(false);
+                loadData();
+            }
+        })
+    }
 
     return (
         <>
@@ -88,30 +114,36 @@ const HomeView: React.FC = () => {
                     <StatisticCard.Group>
                         <StatisticCard statistic={{
                             title: "已注册节点",
-                            value: 2,
+                            value: serverCount.count,
                             status: "default"
-                        }} />
+                        }}/>
                         <StatisticCard statistic={{
                             title: "已联机节点",
-                            value: 1,
+                            value: serverCount.active,
                             status: "success"
-                        }} />
-                        <StatisticCard.Divider />
+                        }}/>
+                        <StatisticCard.Divider/>
                         <StatisticCard statistic={{
                             title: "CPU 占用率",
                             value: (resStat.cpu * 100).toFixed(2) + "%"
-                        }} chart={<RingChart data={resStat.cpu} width={50} /> } chartPlacement={"left"}/>
+                        }} chart={<RingChart data={resStat.cpu} width={50}/>} chartPlacement={"left"}/>
                         <StatisticCard statistic={{
                             title: "内存占用率",
                             value: (resStat.memory * 100).toFixed(2) + "%"
-                        }} chart={<RingChart data={resStat.memory} color={[ "#ffc245", "#E8EFF5" ]} width={50} />}
-                        chartPlacement={"left"}/>
+                        }} chart={<RingChart data={resStat.memory} color={["#ffc245", "#E8EFF5"]} width={50}/>}
+                                       chartPlacement={"left"}/>
                     </StatisticCard.Group>
                 </ProCard>
-                <ProCard title={"节点列表"} bordered headerBordered>
-                    <NodeList lists={servers} />
+                <ProCard title={"节点列表"} bordered headerBordered extra={[
+                    <Button type={"primary"} icon={<PlusOutlined/>} onClick={() => setModalVisible(true)}>添加</Button>
+                ]}>
+                    <NodeList lists={servers} onRefresh={loadData}/>
                 </ProCard>
             </Space>
+
+            <ServerAddModel visible={modalVisible}
+                            onClose={() => setModalVisible(false)}
+                            onSubmit={addServer}/>
         </>
     );
 };
