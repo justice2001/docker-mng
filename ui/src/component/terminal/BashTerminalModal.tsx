@@ -47,8 +47,8 @@ const BashTerminalModal: React.FC<BashTerminalModalProps> = (props) => {
                 terminal?.reset();
                 // auth
                 socket?.emit("terminal", {
-                    uuid: "34567890",
-                    data: {}
+                    uuid: "",
+                    data: res.data.token
                 })
             })
 

@@ -59,3 +59,4 @@ export function response(ctx: RouterCtx, data: any) {
 }
 
 import "../routers/overview"
+import "../routers/auth-router"
