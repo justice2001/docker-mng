@@ -4,6 +4,7 @@ import { NodeInfo } from "../../../common/types/daemon";
 
 import * as pty from "@homebridge/node-pty-prebuilt-multiarch";
 import SingleUseToken from "../service/single-use-token";
+import ConfigService from "../service/config-service";
 
 routerApp.on("info", async (ctx, data) => {
 
@@ -24,6 +25,7 @@ routerApp.on("terminal", async (ctx, data) => {
     console.log("terminal data: ", data)
     const token = await SingleUseToken.auth(data, "terminal")
     if (!token) {
+        ctx.socket.emit("data", "Unauthorized!")
         ctx.socket.disconnect();
         return
     }
@@ -33,9 +35,10 @@ routerApp.on("terminal", async (ctx, data) => {
 
     // Start Command
     if (token.info === "bash") {
-        cmd = "/bin/bash";
+        cmd = ConfigService.getConfig("defaultBash");
         args = ["--login"]
     } else {
+        ctx.socket.emit("data", "Unsupported terminal type")
         ctx.socket.disconnect();
         return
     }
@@ -53,7 +56,6 @@ routerApp.on("terminal", async (ctx, data) => {
     });
 
     ctx.socket.on("stdin", (data) => {
-        console.log(data)
         ptyProcess.write(data)
     })
 

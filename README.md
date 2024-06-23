@@ -37,4 +37,9 @@
 
 ## 鸣谢
 
+- Dockge: 该项目的部分代码与架构设计参考了该项目
 - MCSManager：该项目的部分代码与架构设计参考了该项目
+
+## 架构图
+
+![Architecture](./docs/architecture.png)
