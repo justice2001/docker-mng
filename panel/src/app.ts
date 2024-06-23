@@ -1,6 +1,6 @@
 import Koa from 'koa';
 import bodyParser from 'koa-body';
-import RemoteManage from "./services/remote_manage";
+import RemoteManage from "./services/remote-manage";
 import * as process from "node:process";
 import { mountRouters } from "./router";
 

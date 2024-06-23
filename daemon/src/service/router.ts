@@ -47,11 +47,12 @@ export function navigation (socket: Socket) {
  * 返回响应
  * @param ctx 路由上下文
  * @param data 数据
+ * @param ok 是否成功
  */
-export function response(ctx: RouterCtx, data: any) {
+export function response(ctx: RouterCtx, data: any, ok: boolean = true) {
     const respPacket: IPacket<any> = {
         uuid: ctx.uuid,
-        ok: true,
+        ok: ok,
         event: ctx.event,
         data: data
     }
@@ -60,3 +61,4 @@ export function response(ctx: RouterCtx, data: any) {
 
 import "../routers/overview"
 import "../routers/auth-router"
+import "../routers/stack-router"

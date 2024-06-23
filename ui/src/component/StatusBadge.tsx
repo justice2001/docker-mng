@@ -8,7 +8,7 @@ type StatusBadgeProps = {
 };
 
 const StatusBadge: React.FC<StatusBadgeProps> = (props: StatusBadgeProps) => (
-    <Badge status={props.map[props.value].status} text={props.map[props.value].text} />
+    <Badge status={props.map[props.value]?.status || "default"} text={props.map[props.value]?.text || "Unknown"} />
 );
 
 export default StatusBadge;

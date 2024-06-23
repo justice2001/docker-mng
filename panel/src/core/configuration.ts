@@ -1,7 +1,7 @@
 import * as process from "node:process";
 import * as path from "node:path";
 import * as fs from "node:fs";
-import { ServerConfig } from "../services/remote_manage";
+import { ServerConfig } from "../services/remote-manage";
 
 export type ConfigurationData = {
     token: string;

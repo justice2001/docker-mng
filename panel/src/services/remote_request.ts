@@ -25,9 +25,14 @@ export default class RemoteRequest {
             }, 3000);
 
             socket.on(event, (res: IPacket<any>) => {
-                if (res.uuid == uuid) {
-                    resolve(res.data);
+                if (res.uuid !== uuid) {
+                    return
                 }
+                if (!res.ok) {
+                    reject(res.data)
+                    return;
+                }
+                resolve(res.data);
             });
 
             console.debug("emit socket: ", event)

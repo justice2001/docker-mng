@@ -35,6 +35,9 @@ dependencies:
   koa-router:
     specifier: ^12.0.1
     version: 12.0.1
+  promisify-child-process:
+    specifier: ^4.1.2
+    version: 4.1.2
   socket.io:
     specifier: ^4.7.5
     version: 4.7.5
@@ -938,6 +941,11 @@ packages:
       simple-get: 4.0.1
       tar-fs: 2.1.1
       tunnel-agent: 0.6.0
+    dev: false
+
+  /promisify-child-process@4.1.2:
+    resolution: {integrity: sha512-APnkIgmaHNJpkAn7k+CrJSi9WMuff5ctYFbD0CO2XIPkM8yO7d/ShouU2clywbpHV/DUsyc4bpJCsNgddNtx4g==}
+    engines: {node: '>=8'}
     dev: false
 
   /pump@3.0.0:

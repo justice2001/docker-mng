@@ -24,7 +24,7 @@ const routeConfig = createBrowserRouter([
                 element: <Compose />
             },
             {
-              path: "/compose/:id",
+              path: "/compose/:endpoint/:name",
               element: <ComposeDetail />
             },
             {

@@ -27,6 +27,7 @@ class ApiRequest {
             } else {
                 message.error("请求接口失败: " + e.message)
             }
+            throw e;
         }
     }
 
