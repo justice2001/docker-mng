@@ -10,6 +10,7 @@ export default class RemoteServer {
     private readonly port: number;
     private readonly token: string;
     private readonly name: string;
+    private readonly https: boolean;
 
     private serverInfo: NodeData | null = null;
 
@@ -21,6 +22,8 @@ export default class RemoteServer {
         this.address = address;
         this.port = port;
         this.token = token;
+        this.https = https;
+
         const socket = io(`${https ? "https" : "http"}://${this.address}:${this.port}`);
         this.socket = socket;
 
@@ -90,6 +93,10 @@ export default class RemoteServer {
 
     getSocket() {
         return this.socket;
+    }
+
+    getSocketUrl() {
+        return `${this.https ? "https" : "http"}://${this.address}:${this.port}`;
     }
 
     getServerInfo() {

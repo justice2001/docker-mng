@@ -1,9 +1,18 @@
-import React, { useEffect, useRef } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import {Terminal} from "@xterm/xterm"
 import "@xterm/xterm/css/xterm.css"
 import "./xterminal.css"
 
-const XTerminal: React.FC = () => {
+type XTerminalProps = {
+    onInit?: (terminal: Terminal) => void;
+    onData?: (data: string) => void;
+}
+
+type XTerminalRef = {
+    writeTerminal: (text: string) => void;
+}
+
+const XTerminal: React.ForwardRefRenderFunction<XTerminalRef, XTerminalProps> = (_, ref) => {
 
     const terminalRef = useRef(null);
 
@@ -11,14 +20,23 @@ const XTerminal: React.FC = () => {
         fontFamily: 'Menlo, Monaco, "Courier New", monospace',
         disableStdin: false
     });
+
     let inited = false;
+
+    useImperativeHandle(ref, () => ({
+        writeTerminal: (text: string) => {
+            console.log(inited)
+            if (!inited) {
+                console.error("Terminal not inited!")
+                return
+            }
+            terminal.write(text);
+        }
+    }))
 
     useEffect(() => {
         if (terminalRef.current && !inited) {
-            console.log("A")
             terminal.open(terminalRef.current);
-            terminal.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ \r\n')
-            setInterval(() => terminal.write("Hello from \x1B[1;3;31mxterm.js\x1B[0m $ \r\n"), 1000)
             inited = true;
         }
     }, []);
@@ -29,5 +47,5 @@ const XTerminal: React.FC = () => {
         </div>
     );
 };
-
-export default XTerminal;
+const XTerminalRef = forwardRef(XTerminal)
+export default XTerminalRef;

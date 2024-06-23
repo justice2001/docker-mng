@@ -12,6 +12,7 @@ import MemoryOutlined from "../../icon/MemoryOutlined";
 import ServerOutlined from "../../icon/ServerOutlined";
 import { NodeData, NodeInfo } from "../../../../common/types/daemon.ts";
 import ApiRequest from "../../api/api-request.ts";
+import BashTerminalModalRef from "../terminal/BashTerminalModal.tsx";
 
 const statusMap: Record<string, {
     status: "success" | "default" | "processing" | "error" | "warning";
@@ -41,6 +42,9 @@ type NodeListProps = {
 }
 
 const nodeList: React.FC<NodeListProps> = (props: NodeListProps) => {
+    const [terminalOpen, setTerminalOpen] = React.useState(false);
+    const [terminalEndpoint, setTerminalEndpoint] = React.useState("");
+
     const reconnect = (endpoint: string) => {
         ApiRequest.put(`/nodes/reconnect/${endpoint}`).then(res => {
             if (res.data.ok) {
@@ -57,8 +61,18 @@ const nodeList: React.FC<NodeListProps> = (props: NodeListProps) => {
         })
     }
 
+    const openTerminal = (endpoint: string) => {
+        setTerminalOpen(true)
+        setTerminalEndpoint(endpoint)
+    }
+
     return (
         <>
+            <BashTerminalModalRef open={terminalOpen}
+                                  endpoint={terminalEndpoint}
+                                  name={"bash"}
+                                  onClose={() => setTerminalOpen(false)} />
+
             <ProList<NodeData>
                 dataSource={props.lists}
                 metas={{
@@ -102,6 +116,7 @@ const nodeList: React.FC<NodeListProps> = (props: NodeListProps) => {
                                     <Button
                                         type={"link"}
                                         icon={<CodeOutlined />}
+                                        onClick={() => openTerminal(row.nodeName)}
                                     >
                                         终端
                                     </Button>
