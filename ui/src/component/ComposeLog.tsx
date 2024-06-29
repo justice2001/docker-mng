@@ -18,7 +18,8 @@ const ComposeLog: React.FC<XTerminalProps> = (props) => {
 
     const terminal = new Terminal({
         fontFamily: 'Menlo, Monaco, "Courier New", monospace',
-        disableStdin: false
+        disableStdin: false,
+        cols: 160
     });
 
     let inited = false;

@@ -14,7 +14,7 @@ const demoData: Stack[] = [
         name: "nginx",
         icon: "https://www.svgrepo.com/show/373924/nginx.svg",
         tags: [ "website" ],
-        endpoint: "10.0.0.28",
+        endpoint: "default",
         state: "running",
         envFile: "PORT=880\nSSL_PORT=8443",
         composeFile: "version: 3.0\nservices...."
@@ -23,7 +23,7 @@ const demoData: Stack[] = [
         name: "redis",
         icon: "https://cdn4.iconfinder.com/data/icons/redis-2/1451/Untitled-2-1024.png",
         tags: [ "tools", "dev" ],
-        endpoint: "10.0.0.28",
+        endpoint: "default",
         state: "stopped",
         envFile: "PORT=880\nSSL_PORT=8443",
         composeFile: "version: 3.0\nservices...."
@@ -42,7 +42,7 @@ const ComposeView: React.FC = () => {
             title: {
                 render: (_dom, row) => (
                     <>
-                        <div onClick={() => navigate(`/compose/${row.name}`)}>{row.name}</div>
+                        <div onClick={() => navigate(`/compose/${row.endpoint}/${row.name}`)}>{row.name}</div>
                         <StatusBadge map={StackStatusMap} value={row.state} />
                     </>
                 )

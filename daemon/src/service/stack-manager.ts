@@ -13,7 +13,18 @@ class StackManager {
     }
 
     async getStack(name: string) {
-        return this.stackList.get(name);
+        const stack = this.stackList.get(name);
+        if (!stack) {
+            await this.loadStack();
+            return this.stackList.get(name)
+        }
+        return stack;
+    }
+
+    async getAllStackInfo() {
+        for (const stack of this.stackList.values()) {
+            
+        }
     }
 
     async loadStack() {

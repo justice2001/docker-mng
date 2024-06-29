@@ -1,6 +1,7 @@
 import { StackInfo } from "../../../common/types/StackInfo";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { spawn } from "promisify-child-process";
 
 class Stack {
     private readonly name: string;
@@ -43,6 +44,16 @@ class Stack {
 
     async getComposePath() {
         return this.composeFilePath
+    }
+
+    async runningContainerCount() {
+        const res = await spawn("docker", ["compose", "-f", this.composeFilePath, "ps"], {
+            encoding: "utf-8"
+        });
+        if (!res.stdout) {
+            return 0;
+        }
+        return res.stdout.toString().split("\n").length - 2;
     }
 }
 
