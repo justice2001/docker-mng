@@ -28,13 +28,11 @@ const ComposeLog: React.FC<XTerminalProps> = (props) => {
       terminal.open(terminalRef.current);
       inited = true;
     }
-    if (!socket) {
+    if (!socket || !socket.connected) {
       ApiRequest.get(`/stacks/${props.endpoint}/${props.name}/logs`).then((res) => {
-        console.log(res.data);
         if (socket) return;
         socket = io(res.data.socket);
         socket.on('connect', () => {
-          console.log('connected to logs');
           socket?.emit('stack/logs', {
             uuid: '345678908765434567',
             data: res.data.token,
@@ -42,11 +40,16 @@ const ComposeLog: React.FC<XTerminalProps> = (props) => {
         });
 
         socket.on('data', (data) => {
-          console.log(data);
           terminal.write(data);
         });
       });
     }
+
+    return () => {
+      socket?.disconnect();
+      socket = null;
+      inited = false;
+    };
   }, []);
 
   return (

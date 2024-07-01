@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { ProCard } from '@ant-design/pro-components';
-import { Button, Card, Col, Flex, Row, Space } from 'antd';
+import { Button, Flex, Space } from 'antd';
 import { Delete, DocumentFolder, Edit, PlayOne, Square, UpdateRotation } from '@icon-park/react';
 import Editor from '../component/Editor.tsx';
 import { Stack } from '../types/Stacks.ts';
@@ -39,7 +39,7 @@ const ComposeDetail: React.FC = () => {
         title={
           <>
             <Flex gap={5} align={'center'}>
-              <Avatar size={'large'} src={stack.icon} style={{ marginRight: 8 }} />
+              <Avatar size={'large'} src={stack.icon || '/vite.svg'} style={{ marginRight: 8 }} />
               <Flex vertical>
                 <span style={{ marginRight: 8 }}>{stack.name}</span>
                 <StatusBadge map={StackStatusMap} value={stack.state} />
@@ -71,15 +71,6 @@ const ComposeDetail: React.FC = () => {
         }
       >
         <ComposeLog endpoint={endpoint} name={name} />
-      </ProCard>
-      <ProCard title={'Stack'}>
-        <Row gutter={[16, 16]}>
-          {Array.from({ length: 12 }, (_) => (
-            <Col span={6}>
-              <Card>123</Card>
-            </Col>
-          ))}
-        </Row>
       </ProCard>
       <ProCard title={'Compose配置'}>
         <Editor value={stack.composeFile} />

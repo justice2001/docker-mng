@@ -9,14 +9,27 @@ import React, { useEffect, useState } from 'react';
 import { Plus } from '@icon-park/react';
 import { Stacks } from 'common/dist/types/stacks';
 import apiRequest from '../api/api-request.ts';
+import { v4 } from 'uuid';
+import { NodeData } from 'common/dist/types/daemon';
 
 const ComposeView: React.FC = () => {
   const navigate = useNavigate();
   const [stack, setStack] = useState<Stacks[]>([]);
 
   useEffect(() => {
-    apiRequest.get('/stacks/default').then((res) => {
-      setStack(res.data);
+    setStack([]);
+    apiRequest.get('/overview').then((res) => {
+      const servers = res.data.servers as NodeData[];
+      let stacks: Stacks[] = [];
+      for (const server of servers) {
+        if (server.nodeInfo.nodeStatus === 'connected') {
+          apiRequest.get(`/stacks/${server.nodeName}`).then((res) => {
+            const data = res.data as Stacks[];
+            stacks = stacks.concat(data);
+            setStack(stacks);
+          });
+        }
+      }
     });
   }, []);
 
@@ -48,10 +61,10 @@ const ComposeView: React.FC = () => {
               </Space>
               <Flex gap={'4px 0'} wrap>
                 <Tag color={'processing'}>{row.endpoint}</Tag>
-                {row.tags.map((tag) => {
+                {row.tags.map((tag, index) => {
                   const color = stringToColor(tag);
                   return (
-                    <Tag color={color} style={{ color: textColor(color) }}>
+                    <Tag key={index} color={color} style={{ color: textColor(color) }}>
                       {tag}
                     </Tag>
                   );
@@ -72,8 +85,8 @@ const ComposeView: React.FC = () => {
       <ProList<Stacks>
         headerTitle={'堆栈列表'}
         dataSource={stack}
+        rowKey={(_) => v4()}
         {...gridView}
-        rowKey={'name'}
         toolBarRender={() => [
           <Button type={'primary'} icon={<Plus />}>
             添加

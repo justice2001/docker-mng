@@ -5,6 +5,7 @@ import { NodeInfo } from 'common/dist/types/daemon';
 import * as pty from '@homebridge/node-pty-prebuilt-multiarch';
 import SingleUseToken from '../service/single-use-token';
 import ConfigService from '../service/config-service';
+import logger from 'common/dist/core/logger';
 
 routerApp.on('info', async (ctx, data) => {
   const systemInfo = await getSystemInfo();
@@ -20,7 +21,6 @@ routerApp.on('info', async (ctx, data) => {
 });
 
 routerApp.on('terminal', async (ctx, data) => {
-  console.log('terminal data: ', data);
   const token = await SingleUseToken.auth(data, 'terminal');
   if (!token) {
     ctx.socket.emit('data', 'Unauthorized!');
