@@ -1,5 +1,5 @@
-import { NodeData } from '../../../common/types/daemon';
 import { io, Socket } from 'socket.io-client';
+import { NodeData } from 'common/dist/types/daemon';
 import RemoteRequest from '../services/remote_request';
 import logger from 'common/dist/core/logger';
 

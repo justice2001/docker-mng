@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev:ui": "cd ui && pnpm dev",
+    "dev:panel": "cd panel && pnpm dev",
+    "dev:daemon": "cd daemon && pnpm dev",
+    "build:common": "cd common && pnpm build",
     "format": "prettier --write \"**/src/**/*.{js,jsx,ts,tsx,css,scss,md}\""
   },
   "keywords": [],

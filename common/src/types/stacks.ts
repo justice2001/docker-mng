@@ -1,6 +1,6 @@
 export type StackStatus = 'running' | 'unknown' | 'deploying' | 'warning' | 'stopped';
 
-export type StackInfo = {
+export type Stacks = {
   name: string;
   icon: string;
   tags: string[];

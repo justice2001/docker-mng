@@ -1,6 +1,6 @@
 import { response, routerApp } from '../service/router';
 import { getSystemInfo } from '../service/system_info';
-import { NodeInfo } from '../../../common/types/daemon';
+import { NodeInfo } from 'common/dist/types/daemon';
 
 import * as pty from '@homebridge/node-pty-prebuilt-multiarch';
 import SingleUseToken from '../service/single-use-token';

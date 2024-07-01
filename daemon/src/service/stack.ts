@@ -1,4 +1,4 @@
-import { StackInfo } from '../../../common/types/StackInfo';
+import { Stacks } from '../../../common/src/types/stacks';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { spawn } from 'promisify-child-process';
@@ -30,7 +30,7 @@ class Stack {
     });
   }
 
-  async getInfo(): Promise<StackInfo> {
+  async getInfo(): Promise<Stacks> {
     return {
       name: this.name,
       icon: '',

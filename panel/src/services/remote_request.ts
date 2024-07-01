@@ -1,6 +1,6 @@
 import RemoteServer from '../core/remote_server';
-import { IPacket } from '../../../common/types/Community';
 import logger from 'common/dist/core/logger';
+import { IPacket } from 'common/dist/types/community';
 
 export default class RemoteRequest {
   private remoteServer: RemoteServer;

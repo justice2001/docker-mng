@@ -1,6 +1,6 @@
 import Router from 'koa-router';
-import { NodeData } from '../../../common/types/daemon';
 import remoteManage from '../services/remote-manage';
+import { NodeData } from 'common/dist/types/daemon';
 
 const overviewRouter = new Router({
   prefix: '/overview',
