@@ -1,30 +1,36 @@
 import Koa from 'koa';
 import bodyParser from 'koa-body';
-import RemoteManage from "./services/remote-manage";
-import * as process from "node:process";
-import { mountRouters } from "./router";
+import RemoteManage from './services/remote-manage';
+import * as process from 'node:process';
+import { mountRouters } from './router';
+import logger from 'common/dist/core/logger';
 
 async function main() {
-    const app: Koa = new Koa();
+  logger.info('Docker Manager version 1.0.0');
+  logger.info('Daemon Version 1.0.0');
 
-    app.use(bodyParser());
+  const app: Koa = new Koa();
 
-    mountRouters(app);
+  app.use(bodyParser());
 
-    await RemoteManage.initialize();
+  app.use(async (ctx, next) => {
+    logger.info(`Received request: [${ctx.method}] ${ctx.url}`);
+    logger.debug(`Received request: [${ctx.method}] ${ctx.url} data: ${JSON.stringify(ctx.request.body)}`);
+    await next();
+  });
 
-    const port = process.env.PORT || 3000;
+  mountRouters(app);
 
-    app.listen(port, () => {
-        console.log(`DOCKER MANAGER`)
-        console.log("App listening on port " + port);
-    });
+  await RemoteManage.initialize();
+
+  const port = process.env.PORT || 3000;
+
+  app.listen(port, () => {
+    logger.info('App listening on port ' + port);
+  });
 }
 
-console.log("Docker Manager version 1.0.0")
-console.log("Daemon Version 1.0.0")
-
-main().catch(err => {
-    console.log(err)
-    process.exit(1);
-})
+main().catch((err) => {
+  logger.error(err);
+  process.exit(1);
+});

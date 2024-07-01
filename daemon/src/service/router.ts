@@ -1,27 +1,28 @@
-import { EventEmitter } from "events";
-import { RouterCtx } from "../entities/ctx";
-import { Socket } from "socket.io";
-import { IPacket } from "../../../common/types/Community";
+import { EventEmitter } from 'events';
+import { RouterCtx } from '../entities/ctx';
+import { Socket } from 'socket.io';
+import { IPacket } from '../../../common/types/Community';
+import logger from 'common/dist/core/logger';
 
 /**
  * 路由触发器
  */
 class RouterApp extends EventEmitter {
-    emitRouter(event: string, ctx: RouterCtx, data: any) {
-        try {
-            // service logic routing trigger point
-            super.emit(event, ctx, data);
-        } catch (error: any) {
-            ctx.socket.emit(ctx.event, {
-                err: "have some problem!"
-            });
-        }
-        return this;
+  emitRouter(event: string, ctx: RouterCtx, data: any) {
+    try {
+      // service logic routing trigger point
+      super.emit(event, ctx, data);
+    } catch (error: any) {
+      ctx.socket.emit(ctx.event, {
+        err: 'have some problem!',
+      });
     }
+    return this;
+  }
 
-    on(event: string, fn: (ctx: RouterCtx, data: any) => void) {
-        return super.on(event, fn);
-    }
+  on(event: string, fn: (ctx: RouterCtx, data: any) => void) {
+    return super.on(event, fn);
+  }
 }
 
 export const routerApp = new RouterApp();
@@ -30,17 +31,18 @@ export const routerApp = new RouterApp();
  * 注册socket.io路由
  * @param socket socket
  */
-export function navigation (socket: Socket) {
-    for (const event of routerApp.eventNames()) {
-        socket.on(event as string, (packet: IPacket<any>) => {
-            const ctx: RouterCtx = {
-                socket: socket,
-                event: event as string,
-                uuid: packet.uuid
-            }
-            routerApp.emitRouter(event as string, ctx, packet.data);
-        });
-    }
+export function navigation(socket: Socket) {
+  for (const event of routerApp.eventNames()) {
+    socket.on(event as string, (packet: IPacket<any>) => {
+      logger.info(`request event: ${event as string}(${packet.uuid}) -> ${JSON.stringify(packet.data)}`, 'Router');
+      const ctx: RouterCtx = {
+        socket: socket,
+        event: event as string,
+        uuid: packet.uuid,
+      };
+      routerApp.emitRouter(event as string, ctx, packet.data);
+    });
+  }
 }
 
 /**
@@ -50,15 +52,16 @@ export function navigation (socket: Socket) {
  * @param ok 是否成功
  */
 export function response(ctx: RouterCtx, data: any, ok: boolean = true) {
-    const respPacket: IPacket<any> = {
-        uuid: ctx.uuid,
-        ok: ok,
-        event: ctx.event,
-        data: data
-    }
-    ctx.socket.emit(ctx.event, respPacket);
+  const respPacket: IPacket<any> = {
+    uuid: ctx.uuid,
+    ok: ok,
+    event: ctx.event,
+    data: data,
+  };
+  logger.debug(`Response event: ${ctx.event}(${respPacket.uuid}) -> ${JSON.stringify(respPacket.data)}`, 'router');
+  ctx.socket.emit(ctx.event, respPacket);
 }
 
-import "../routers/overview"
-import "../routers/auth-router"
-import "../routers/stack-router"
+import '../routers/overview';
+import '../routers/auth-router';
+import '../routers/stack-router';

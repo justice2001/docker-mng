@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "ts-node --project tsconfig.json src/app.ts"
+    "dev": "NODE_ENV=dev ts-node --project tsconfig.json src/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +23,8 @@
     "socket.io": "^4.7.5",
     "systeminformation": "^5.22.11",
     "typescript": "^5.4.5",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.6",
