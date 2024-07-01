@@ -5,20 +5,37 @@ class Logger {
   protected _logger: winston.Logger;
 
   constructor() {
+    const myFormat = winston.format.printf(({ level, message, label, timestamp }) => {
+      return `${timestamp} [${level}] (${label || 'app'}): ${message}`;
+    });
+
     this._logger = winston.createLogger({
       level: process.env.LOG_LEVEL || process.env.NODE_ENV === 'dev' ? 'debug' : 'info',
-      format: winston.format.combine(
-        winston.format((info) => {
-          info.level = info.level.toUpperCase();
-          return info;
-        })(),
-        winston.format.colorize(),
-        winston.format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss' }),
-        winston.format.printf(({ level, message, label, timestamp }) => {
-          return `${timestamp} [${level}] (${label || 'app'}): ${message}`;
+      transports: [
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format((info) => {
+              info.level = info.level.toUpperCase();
+              return info;
+            })(),
+            winston.format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss' }),
+            winston.format.colorize(),
+            myFormat,
+          ),
         }),
-      ),
-      transports: [new winston.transports.Console()],
+        new winston.transports.File({
+          filename: process.env.LOG_FILE || 'logs/logs.log',
+          level: 'info',
+          format: winston.format.combine(
+            winston.format((info) => {
+              info.level = info.level.toUpperCase();
+              return info;
+            })(),
+            winston.format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss' }),
+            myFormat,
+          ),
+        }),
+      ],
     });
   }
 

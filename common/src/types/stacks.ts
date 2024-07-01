@@ -6,7 +6,7 @@ export type Stacks = {
   tags: string[];
   endpoint: string;
   state: StackStatus;
-  envFile: string;
+  envFile?: string;
   composeFile?: string;
 };
 

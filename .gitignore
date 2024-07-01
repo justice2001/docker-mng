@@ -11,3 +11,4 @@ tmp
 frontend-dist
 
 config/
+logs/

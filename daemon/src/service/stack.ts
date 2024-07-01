@@ -1,4 +1,4 @@
-import { Stacks } from '../../../common/src/types/stacks';
+import { Stacks, StackStatus } from 'common/dist/types/stacks';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { spawn } from 'promisify-child-process';
@@ -9,8 +9,8 @@ class Stack {
   private readonly workDir: string;
   private readonly managed: boolean;
 
-  private composeFile: string = '';
-  private envFile: string = '';
+  private readonly composeFile: string = '';
+  private readonly envFile: string = '';
 
   constructor(name: string, composeFilePath: string) {
     this.name = name;
@@ -34,12 +34,22 @@ class Stack {
     return {
       name: this.name,
       icon: '',
-      tags: [''],
+      tags: ['compose'],
       endpoint: '',
-      state: 'running',
+      state: await this.status(),
       envFile: this.envFile,
       composeFile: this.composeFile,
     };
+  }
+
+  async status(): Promise<StackStatus> {
+    const res = await spawn('docker', ['compose', '-f', this.composeFilePath, 'ps'], {
+      encoding: 'utf-8',
+    });
+    if (!res.stdout) {
+      return 'unknown';
+    }
+    return res.stdout.toString().split('\n').length - 2 > 0 ? 'running' : 'stopped';
   }
 
   async getComposePath() {

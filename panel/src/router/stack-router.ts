@@ -1,9 +1,33 @@
 import Router from 'koa-router';
 import RemoteManage from '../services/remote-manage';
 import RemoteRequest from '../services/remote_request';
+import { Stacks } from 'common/dist/types/stacks';
 
 const stackRouter = new Router({
   prefix: '/stacks',
+});
+
+stackRouter.get('/:endpoint', async (ctx) => {
+  const server = await RemoteManage.getServer(ctx.params.endpoint);
+  if (!server) {
+    ctx.status = 404;
+    ctx.body = {
+      message: 'Server not found',
+    };
+    return;
+  }
+  try {
+    const resp = (await new RemoteRequest(server).request('stack/list', {})) as Stacks[];
+    resp.forEach((stack) => {
+      stack.endpoint = ctx.params.endpoint;
+    });
+    ctx.body = resp;
+  } catch (e: any) {
+    ctx.status = 500;
+    ctx.body = {
+      message: e.message,
+    };
+  }
 });
 
 stackRouter.get('/:endpoint/:name', async (ctx) => {

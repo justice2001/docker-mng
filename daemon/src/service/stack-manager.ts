@@ -1,6 +1,7 @@
 import Stack from './stack';
 import { spawn } from 'promisify-child-process';
 import logger from 'common/dist/core/logger';
+import { Stacks } from 'common/dist/types/stacks';
 
 class StackManager {
   private readonly stackList: Map<string, Stack>;
@@ -23,8 +24,11 @@ class StackManager {
   }
 
   async getAllStackInfo() {
+    const stacks: Stacks[] = [];
     for (const stack of this.stackList.values()) {
+      stacks.push(await stack.getInfo());
     }
+    return stacks;
   }
 
   async loadStack() {

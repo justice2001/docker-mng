@@ -5,7 +5,12 @@ import { IPty, spawn } from '@homebridge/node-pty-prebuilt-multiarch';
 import logger from 'common/dist/core/logger';
 
 routerApp.on('stack/list', async (ctx, data) => {
-  await StackManager.getStack('nginx');
+  const stacks = await StackManager.getAllStackInfo();
+  stacks.forEach((stack) => {
+    stack.envFile = undefined;
+    stack.composeFile = undefined;
+  });
+  response(ctx, stacks);
 });
 
 routerApp.on('stack/get', async (ctx, data) => {
