@@ -1,6 +1,5 @@
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { Dropdown, Space } from 'antd';
-import React from 'react';
 import {
   AppstoreOutlined,
   ContainerOutlined,
@@ -16,7 +15,7 @@ import { PageContainer, ProCard, ProLayout } from '@ant-design/pro-components';
 
 import DocketLogo from '../assets/docker.svg';
 
-export default function () {
+const AppLayout: React.FC = () => {
   const navigate = useNavigate();
 
   const user = window.localStorage.getItem('user');
@@ -84,7 +83,7 @@ export default function () {
           src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
           size: 'small',
           title: 'zhengyi59',
-          render: (props, dom) => {
+          render: (_props, dom) => {
             return (
               <Dropdown
                 menu={{
@@ -147,4 +146,6 @@ export default function () {
       </ProLayout>
     </>
   );
-}
+};
+
+export default AppLayout;

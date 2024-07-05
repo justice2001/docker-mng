@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "NODE_ENV=dev ts-node --project tsconfig.json src/app.ts"
+    "dev": "NODE_ENV=dev ts-node --project tsconfig.json src/app.ts",
+    "build": "webpack --config webpack.config.js"
   },
   "keywords": [],
   "author": "",
@@ -28,7 +29,11 @@
   },
   "devDependencies": {
     "@types/node": "^20.14.6",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
-    "tslib": "^2.6.3"
+    "tslib": "^2.6.3",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0"
   }
 }

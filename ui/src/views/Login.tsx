@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoginFormPage, ProFormText } from '@ant-design/pro-components';
 
@@ -7,7 +6,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
 import './login.css';
 
-export default function () {
+const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const loginHandler = () => {
@@ -54,4 +53,6 @@ export default function () {
       </LoginFormPage>
     </>
   );
-}
+};
+
+export default Login;

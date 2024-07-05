@@ -5,7 +5,7 @@ import { Badge, Button, Popconfirm, Space } from 'antd';
 import ChipsetOutlined from '../../icon/ChipsetOutlined';
 import MemoryOutlined from '../../icon/MemoryOutlined';
 import ServerOutlined from '../../icon/ServerOutlined';
-import { NodeData, NodeInfo } from '../../../../common/types/daemon.ts';
+import { NodeData, NodeInfo } from 'common/dist/types/daemon';
 import ApiRequest from '../../api/api-request.ts';
 import BashTerminalModalRef from '../terminal/BashTerminalModal.tsx';
 
@@ -39,7 +39,7 @@ type NodeListProps = {
   onRefresh: () => void;
 };
 
-const nodeList: React.FC<NodeListProps> = (props: NodeListProps) => {
+const NodeList: React.FC<NodeListProps> = (props: NodeListProps) => {
   const [terminalOpen, setTerminalOpen] = React.useState(false);
   const [terminalEndpoint, setTerminalEndpoint] = React.useState('');
 
@@ -149,4 +149,4 @@ const nodeList: React.FC<NodeListProps> = (props: NodeListProps) => {
   );
 };
 
-export default nodeList;
+export default NodeList;

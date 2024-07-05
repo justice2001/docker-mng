@@ -3,7 +3,7 @@ import { ProCard, StatisticCard } from '@ant-design/pro-components';
 import { Button, Space } from 'antd';
 import NodeList from '../component/home/NodeList';
 import RingChart from '../component/RingChart.tsx';
-import { NodeData } from '../../../common/types/daemon.ts';
+import { NodeData } from 'common/dist/types/daemon.ts';
 import apiRequest from '../api/api-request.ts';
 import { PlusOutlined } from '@ant-design/icons';
 import ServerAddModel, { ServerAddData } from '../component/home/ServerAddModel.tsx';

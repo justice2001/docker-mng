@@ -2,6 +2,7 @@ import { Stacks, StackStatus } from 'common/dist/types/stacks';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { spawn } from 'promisify-child-process';
+import logger from 'common/dist/core/logger';
 
 class Stack {
   private readonly name: string;
@@ -17,6 +18,11 @@ class Stack {
     this.composeFilePath = composeFilePath;
     this.managed = true;
     this.workDir = path.dirname(composeFilePath);
+    // Not managed stack
+    if (!fs.existsSync(composeFilePath)) {
+      this.managed = false;
+      return;
+    }
     // Load compose file
     this.composeFile = fs.readFileSync(composeFilePath, {
       encoding: 'utf-8',
@@ -49,6 +55,7 @@ class Stack {
     if (!res.stdout) {
       return 'unknown';
     }
+    logger.debug(res.stdout.toString(), 'Stack');
     return res.stdout.toString().split('\n').length - 2 > 0 ? 'running' : 'stopped';
   }
 
