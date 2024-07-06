@@ -26,3 +26,5 @@ export type Service = {
 };
 
 export type ComposeEnv = Record<string, string>;
+
+export type StackOperation = 'up' | 'down' | 'restart' | 'update';

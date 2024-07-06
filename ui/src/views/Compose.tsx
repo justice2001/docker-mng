@@ -49,7 +49,7 @@ const ComposeView: React.FC = () => {
       },
       avatar: {
         dataIndex: 'icon',
-        render: (_dom, row) => <Avatar src={row.icon || '/vite.svg'} style={{ marginRight: 8 }} />,
+        render: (_dom, row) => <Avatar src={row.icon || '/docker.svg'} style={{ marginRight: 8 }} />,
       },
       content: {
         render: (_dom, row) => {

@@ -1,8 +1,7 @@
-import { Stacks, StackStatus } from 'common/dist/types/stacks';
+import { StackOperation, Stacks, StackStatus } from 'common/dist/types/stacks';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { spawn } from 'promisify-child-process';
-import logger from 'common/dist/core/logger';
 
 class Stack {
   private readonly name: string;
@@ -49,14 +48,24 @@ class Stack {
   }
 
   async status(): Promise<StackStatus> {
-    const res = await spawn('docker', ['compose', '-f', this.composeFilePath, 'ps'], {
+    const res = await spawn('docker', ['compose', '-f', this.composeFilePath, 'ps', '-a', '--format', 'json'], {
       encoding: 'utf-8',
+      shell: true,
     });
     if (!res.stdout) {
       return 'unknown';
     }
-    logger.debug(res.stdout.toString(), 'Stack');
-    return res.stdout.toString().split('\n').length - 2 > 0 ? 'running' : 'stopped';
+    const containers = res.stdout
+      .toString()
+      .split('\n')
+      .filter((container) => container.length > 0)
+      .map((container) => {
+        return JSON.parse(container);
+      });
+    if (containers.some((container) => container.State === 'running')) {
+      return 'running';
+    }
+    return 'stopped';
   }
 
   async getComposePath() {
@@ -71,6 +80,32 @@ class Stack {
       return 0;
     }
     return res.stdout.toString().split('\n').length - 2;
+  }
+
+  async getOperationCmd(operation: StackOperation) {
+    switch (operation) {
+      case 'up':
+        return ['compose', '-f', this.composeFilePath, 'up', '-d'];
+      case 'down':
+        return ['compose', '-f', this.composeFilePath, 'down'];
+      case 'restart':
+        return ['compose', '-f', this.composeFilePath, 'restart'];
+      case 'update':
+        return [
+          'compose',
+          '-f',
+          this.composeFilePath,
+          'pull',
+          '&&',
+          'docker',
+          'compose',
+          '-f',
+          this.composeFilePath,
+          'up',
+          '-d',
+        ];
+    }
+    return null;
   }
 }
 

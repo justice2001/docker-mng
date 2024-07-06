@@ -3,8 +3,10 @@ import StackManager from '../service/stack-manager';
 import SingleUseToken from '../service/single-use-token';
 import { IPty, spawn } from '@homebridge/node-pty-prebuilt-multiarch';
 import logger from 'common/dist/core/logger';
+import { StackOperation } from 'common/dist/types/stacks';
+import { SINGLE_AUTH_OPERATION } from 'common/dist/types/auth';
 
-routerApp.on('stack/list', async (ctx, data) => {
+routerApp.on('stack/list', async (ctx) => {
   const stacks = await StackManager.getAllStackInfo();
   stacks.forEach((stack) => {
     stack.envFile = undefined;
@@ -80,5 +82,46 @@ routerApp.on('stack/logs', async (ctx, data) => {
   ctx.socket.on('disconnect', () => {
     process?.kill();
     logger.debug('console log disconnect', ctx.socket.id);
+  });
+});
+
+routerApp.on('stack/operation', async (ctx, data) => {
+  const token = await SingleUseToken.auth(data, SINGLE_AUTH_OPERATION);
+  if (!token) {
+    ctx.socket.emit('data', 'Unauthorized!');
+    ctx.socket.disconnect();
+    return;
+  }
+
+  const [name, op] = token.info.split('|');
+
+  const stack = await StackManager.getStack(name);
+  if (!stack) {
+    ctx.socket.emit('data', 'Stack not found!');
+    ctx.socket.disconnect();
+    return;
+  }
+
+  const cmd = await stack.getOperationCmd(op as StackOperation);
+
+  logger.debug(`stack operation, cmd: ${cmd}`, ctx.socket.id);
+  if (!cmd) {
+    ctx.socket.emit('data', 'Operation not found!');
+    ctx.socket.disconnect();
+    return;
+  }
+
+  const iPty = spawn('docker', cmd, {
+    encoding: 'utf-8',
+  });
+
+  iPty.onData((data) => {
+    ctx.socket.emit('data', data);
+  });
+
+  iPty.onExit((code) => {
+    logger.debug('stack operation process exited', ctx.socket.id);
+    ctx.socket.emit('data', `\x1b[0;32mProcess complated with code ${code.exitCode} \x1b[0m\r\n`);
+    ctx.socket.disconnect();
   });
 });

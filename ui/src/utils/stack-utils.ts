@@ -1,6 +1,7 @@
 import { BadgeMap } from '../types/antd';
+import { StackStatus } from 'common/dist/types/stacks.ts';
 
-export const StackStatusMap: Record<string, BadgeMap> = {
+export const StackStatusMap: Record<StackStatus, BadgeMap> = {
   running: {
     status: 'success',
     text: '运行中',
@@ -8,6 +9,18 @@ export const StackStatusMap: Record<string, BadgeMap> = {
   stopped: {
     status: 'error',
     text: '已停止',
+  },
+  unknown: {
+    status: 'default',
+    text: '未部署',
+  },
+  deploying: {
+    status: 'processing',
+    text: '处理中',
+  },
+  warning: {
+    status: 'warning',
+    text: '警告',
   },
 };
 
