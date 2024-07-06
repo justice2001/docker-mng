@@ -1,4 +1,3 @@
-import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { ServerConfig } from '../services/remote-manage';
 import logger from 'common/dist/logger';
@@ -32,6 +31,7 @@ class Configuration {
         encoding: 'utf-8',
       }),
     );
+    logger.debug(`Config: ${JSON.stringify(this.config)}`);
   }
 
   getConfig(key: keyof ConfigurationData) {
@@ -40,8 +40,7 @@ class Configuration {
 
   updateConfig(key: keyof ConfigurationData, value: any) {
     this.config[key] = value;
-    const configFile = path.join(configPath, 'config.json');
-    fs.writeFileSync(configFile, JSON.stringify(this.config, null, 4));
+    fs.writeFileSync(panelConfig, JSON.stringify(this.config, null, 4));
   }
 }
 

@@ -77,7 +77,7 @@ const ComposeEdit: React.FC<ComposeEditProps> = (props) => {
     <>
       <Modal
         open={props.open}
-        title={<Input size={'small'} style={{ width: 140 }} value={data?.name} onChange={nameChange} />}
+        title={<Input disabled size={'small'} style={{ width: 140 }} value={data?.name} onChange={nameChange} />}
         width="80%"
         onOk={submit}
         onCancel={props.onClose}
@@ -85,7 +85,8 @@ const ComposeEdit: React.FC<ComposeEditProps> = (props) => {
         <Flex justify="space-between">
           <Segmented
             options={[
-              { label: '图形化', value: 'graph', disabled: true },
+              { label: '堆栈配置', value: 'stack', disabled: true },
+              { label: '平台配置', value: 'other', disabled: true },
               { label: '代码', value: 'code' },
             ]}
             value={mode}

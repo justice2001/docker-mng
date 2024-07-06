@@ -18,11 +18,11 @@ const statusMap: Record<
 > = {
   connected: {
     status: 'success',
-    text: '已连接，运行中',
+    text: '运行中',
   },
   disconnected: {
     status: 'error',
-    text: '链接断开',
+    text: '未连接',
   },
   registered: {
     status: 'processing',

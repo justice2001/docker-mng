@@ -11,25 +11,32 @@ import { Stacks } from 'common/dist/types/stacks';
 import apiRequest from '../api/api-request.ts';
 import { v4 } from 'uuid';
 import { NodeData } from 'common/dist/types/daemon';
+import './compose.css';
 
 const ComposeView: React.FC = () => {
   const navigate = useNavigate();
   const [stack, setStack] = useState<Stacks[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setStack([]);
-    apiRequest.get('/overview').then((res) => {
+    setLoading(true);
+    apiRequest.get('/overview/servers').then((res) => {
       const servers = res.data.servers as NodeData[];
-      let stacks: Stacks[] = [];
-      for (const server of servers) {
-        if (server.nodeInfo.nodeStatus === 'connected') {
-          apiRequest.get(`/stacks/${server.nodeName}`).then((res) => {
-            const data = res.data as Stacks[];
-            stacks = stacks.concat(data);
-            setStack(stacks);
-          });
-        }
-      }
+      Promise.all(
+        servers.map(async (server) => {
+          if (server.nodeInfo.nodeStatus === 'connected') {
+            const res = await apiRequest.get(`/stacks/${server.nodeName}`);
+            return res.data as Stacks[];
+          } else {
+            return Promise.resolve([]);
+          }
+        }),
+      ).then((res) => {
+        const stacks = res.flatMap((stack) => stack);
+        setStack(stacks);
+        setLoading(false);
+      });
     });
   }, []);
 
@@ -49,7 +56,7 @@ const ComposeView: React.FC = () => {
       },
       avatar: {
         dataIndex: 'icon',
-        render: (_dom, row) => <Avatar src={row.icon || '/docker.svg'} style={{ marginRight: 8 }} />,
+        render: (_dom, row) => <Avatar shape="square" src={row.icon || '/docker.png'} style={{ marginRight: 8 }} />,
       },
       content: {
         render: (_dom, row) => {
@@ -83,6 +90,7 @@ const ComposeView: React.FC = () => {
   return (
     <>
       <ProList<Stacks>
+        loading={loading}
         headerTitle={'堆栈列表'}
         dataSource={stack}
         rowKey={(_) => v4()}

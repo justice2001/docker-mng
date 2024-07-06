@@ -6,7 +6,7 @@ const overviewRouter = new Router({
   prefix: '/overview',
 });
 
-overviewRouter.get('/', async (ctx) => {
+overviewRouter.get('/servers', async (ctx) => {
   // 计算所有CPU核心的总使用情况
   const servers: NodeData[] = [];
   const allServer = await remoteManage.getAllServers();
@@ -15,8 +15,6 @@ overviewRouter.get('/', async (ctx) => {
     info && servers.push(info);
   });
   ctx.body = {
-    cpuUsage: 0,
-    memUsage: 0,
     serverCount: await remoteManage.serverCount(),
     activeServerCount: await remoteManage.activeCount(),
     servers,

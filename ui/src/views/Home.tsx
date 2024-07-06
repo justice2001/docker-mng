@@ -15,8 +15,10 @@ type ResourceStat = {
   disk?: number;
 };
 
+let serverInterval = -1;
+
 const HomeView: React.FC = () => {
-  const [resStat, setResStat] = React.useState<ResourceStat>({
+  const [resStat] = React.useState<ResourceStat>({
     cpu: 0,
     memory: 0,
     disk: 0,
@@ -33,19 +35,33 @@ const HomeView: React.FC = () => {
 
   useEffect(() => {
     loadData();
+
+    return () => {
+      clearInterval(serverInterval);
+      serverInterval = -1;
+    };
   }, []);
 
+  const interval = (fn: () => void) => {
+    fn.apply(this);
+    return setInterval(() => {
+      fn.apply(this);
+    }, 2000);
+  };
+
   const loadData = () => {
-    apiRequest.get('overview').then((r) => {
-      console.log(r);
-      setResStat({
-        cpu: r.data.cpuUsage,
-        memory: r.data.memUsage,
-      });
-      setServers(r.data.servers);
-      setServerCount({
-        count: r.data.serverCount,
-        active: r.data.activeServerCount,
+    // 刷新 server 信息
+    if (serverInterval !== -1) {
+      clearInterval(serverInterval);
+    }
+    serverInterval = interval(() => {
+      apiRequest.get('overview/servers').then((r) => {
+        console.log(r);
+        setServers(r.data.servers);
+        setServerCount({
+          count: r.data.serverCount,
+          active: r.data.activeServerCount,
+        });
       });
     });
   };

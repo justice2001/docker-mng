@@ -35,16 +35,21 @@ export default class RemoteServer {
       socket.emit('auth', this.token);
       this.errCount = 0;
 
-      new RemoteRequest(this).request('info', {}).then((res) => {
-        logger.debug(`server ${this.port} info: ${JSON.stringify(res)}`, 'remote_server');
-        this.serverInfo = {
-          nodeName: name,
-          nodeIp: address,
-          nodeMngPort: port,
-          nodeInfo: res,
-        };
-        this.serverInfo.nodeInfo.nodeStatus = 'connected';
-      });
+      new RemoteRequest(this)
+        .request('info', {})
+        .then((res) => {
+          logger.debug(`server ${this.port} info: ${JSON.stringify(res)}`, 'remote_server');
+          this.serverInfo = {
+            nodeName: name,
+            nodeIp: address,
+            nodeMngPort: port,
+            nodeInfo: res,
+          };
+          this.serverInfo.nodeInfo.nodeStatus = 'connected';
+        })
+        .catch((err) => {
+          logger.error(`Error: ${err}`, 'remote_server');
+        });
     });
 
     socket.on('connect_error', () => {

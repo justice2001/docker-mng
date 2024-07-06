@@ -13,6 +13,7 @@ import ComposeLog from '../component/ComposeLog.tsx';
 import ComposeEdit from '../component/compose/compose-edit/ComposeEdit.tsx';
 import { StackOperation, Stacks } from 'common/dist/types/stacks';
 import ComposeOperation from '../component/compose/compose-operation/ComposeOperation.tsx';
+import './compose.css';
 
 const ComposeDetail: React.FC = () => {
   const params = useParams();
@@ -92,7 +93,7 @@ const ComposeDetail: React.FC = () => {
           title={
             <>
               <Flex gap={5} align={'center'}>
-                <Avatar size={'large'} src={stack.icon || '/vite.svg'} style={{ marginRight: 8 }} />
+                <Avatar size={'large'} src={stack.icon || '/docker.png'} style={{ marginRight: 8 }} />
                 <Flex vertical>
                   <span style={{ marginRight: 8 }}>{stack.name}</span>
                   <StatusBadge map={StackStatusMap} value={stack.state} />

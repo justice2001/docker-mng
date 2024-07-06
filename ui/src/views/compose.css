@@ -1,0 +1,3 @@
+.ant-avatar >img {
+    object-fit: contain!important;
+}

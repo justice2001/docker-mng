@@ -29,6 +29,7 @@ class RemoteManage {
         token: '123456',
         https: false,
       });
+      return;
     }
     list.forEach((item) => {
       this.map.set(item.name, new RemoteServer(item.name, item.ip, item.port, item.token, item.https));
