@@ -3,6 +3,19 @@ import * as http from 'node:http';
 import io from 'socket.io';
 import { navigation } from './service/router';
 import logger from 'common/dist/core/logger';
+import * as fs from 'node:fs';
+import { configPath, dataPath, stackPath } from 'common/dist/core/base-path';
+
+// 处理必要的文件夹
+if (!fs.existsSync(configPath)) {
+  fs.mkdirSync(configPath, { recursive: true });
+}
+if (!fs.existsSync(stackPath)) {
+  fs.mkdirSync(stackPath, { recursive: true });
+}
+if (!fs.existsSync(dataPath)) {
+  fs.mkdirSync(dataPath, { recursive: true });
+}
 
 const app = new Koa();
 

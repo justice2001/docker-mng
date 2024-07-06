@@ -1,8 +1,8 @@
-import * as process from 'node:process';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { ServerConfig } from '../services/remote-manage';
 import logger from 'common/dist/logger';
+import { configPath, panelConfig } from 'common/dist/core/base-path';
 
 export type ConfigurationData = {
   token: string;
@@ -14,14 +14,12 @@ const defaultConfig: ConfigurationData = {
   serverList: [],
 };
 
-const configPath = process.env.CONFIG_PATH || path.normalize('config');
-
 class Configuration {
   private readonly config: ConfigurationData;
 
   constructor() {
     // Read Configuration
-    const configFile = path.join(configPath, 'config.json');
+    const configFile = panelConfig;
     logger.info('Read Configuration from: ' + configFile);
     if (!fs.existsSync(configPath)) {
       fs.mkdirSync(configPath, { recursive: true });

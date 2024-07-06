@@ -1,9 +1,9 @@
 import * as process from 'node:process';
-import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { v4 as uuidv4 } from 'uuid';
 import * as jwt from 'jsonwebtoken';
 import logger from 'common/dist/core/logger';
+import { configPath, daemonConfig } from 'common/dist/core/base-path';
 
 type Configuration = {
   defaultBash: string;
@@ -17,28 +17,24 @@ const defaultConfig: Configuration = {
   jwtSecret: '1234567890qwertyuiopasdfghjklzxcvbnm',
 };
 
-const configPath = process.env.CONFIG_PATH || path.normalize('config');
-
-const configFile = path.join(configPath, 'config.json');
-
 class ConfigService {
   private readonly config: Configuration;
 
   constructor() {
-    logger.debug(`loading config: ${configFile}`);
+    logger.debug(`loading config: ${daemonConfig}`);
     if (!fs.existsSync(configPath)) {
       fs.mkdirSync(configPath, { recursive: true });
     }
-    if (!fs.existsSync(configFile)) {
+    if (!fs.existsSync(daemonConfig)) {
       // Generate Access token
       const payload = {
         uuid: uuidv4(),
       };
       defaultConfig.accessToken = jwt.sign(payload, defaultConfig.jwtSecret, {});
-      fs.writeFileSync(configFile, JSON.stringify(defaultConfig, null, 4));
+      fs.writeFileSync(daemonConfig, JSON.stringify(defaultConfig, null, 4));
     }
     this.config = JSON.parse(
-      fs.readFileSync(configFile, {
+      fs.readFileSync(daemonConfig, {
         encoding: 'utf-8',
       }),
     );

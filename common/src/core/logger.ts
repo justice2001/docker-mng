@@ -1,5 +1,7 @@
 import * as winston from 'winston';
 import * as process from 'node:process';
+import { logPath } from './base-path';
+import path from 'node:path';
 
 class Logger {
   protected _logger: winston.Logger;
@@ -24,7 +26,7 @@ class Logger {
           ),
         }),
         new winston.transports.File({
-          filename: process.env.LOG_FILE || 'logs/logs.log',
+          filename: path.join(logPath, 'logs.log'),
           level: 'info',
           format: winston.format.combine(
             winston.format((info) => {
