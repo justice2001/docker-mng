@@ -16,6 +16,7 @@
     "@types/koa-router": "^7.4.8",
     "@types/uuid": "^10.0.0",
     "events": "^3.3.0",
+    "js-yaml": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
     "koa": "^2.15.3",
     "koa-body": "^6.0.1",
@@ -28,6 +29,7 @@
     "winston": "^3.13.0"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.14.6",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",

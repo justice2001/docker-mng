@@ -5,6 +5,7 @@ import { IPty, spawn } from '@homebridge/node-pty-prebuilt-multiarch';
 import logger from 'common/dist/core/logger';
 import { StackOperation } from 'common/dist/types/stacks';
 import { SINGLE_AUTH_OPERATION } from 'common/dist/types/auth';
+import Stack from '../service/stack';
 
 routerApp.on('stack/list', async (ctx) => {
   const stacks = await StackManager.getAllStackInfo();
@@ -59,8 +60,9 @@ routerApp.on('stack/logs', async (ctx, data) => {
 
     process.onExit((code) => {
       logger.debug('compose log process exited', ctx.socket.id);
-      ctx.socket.emit('data', `\x1b[1;31mProcess exited with code ${code.exitCode}, restarting \x1b[0m\r\n`);
+      ctx.socket.emit('data', `\x1b[1;31mProcess exited with code ${code.exitCode} \x1b[0m\r\n`);
       if (!ctx.socket.connected) return;
+      if (code.exitCode !== 0) return;
       setTimeout(async () => {
         const runCount = (await stack?.runningContainerCount()) || 0;
         if (runCount > 0) {
@@ -111,7 +113,7 @@ routerApp.on('stack/operation', async (ctx, data) => {
     return;
   }
 
-  const iPty = spawn('docker', cmd, {
+  const iPty = spawn('bash', ['-c', cmd], {
     encoding: 'utf-8',
   });
 
@@ -124,4 +126,20 @@ routerApp.on('stack/operation', async (ctx, data) => {
     ctx.socket.emit('data', `\x1b[0;32mProcess complated with code ${code.exitCode} \x1b[0m\r\n`);
     ctx.socket.disconnect();
   });
+});
+
+routerApp.on('stack/update', async (ctx, data) => {
+  const { stackName, name, envFile, composeFile } = data;
+  const stack = await StackManager.getStack(stackName);
+  if (!stack) {
+    response(ctx, { ok: false, message: 'Stack not found!' }, false);
+    return;
+  }
+
+  const result = await stack.updateConfig(envFile, composeFile, name);
+  if (result) {
+    response(ctx, { ok: false, message: result }, false);
+  } else {
+    response(ctx, { ok: true });
+  }
 });

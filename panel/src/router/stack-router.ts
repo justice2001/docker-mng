@@ -109,4 +109,28 @@ stackRouter.get('/:endpoint/:name/operation/:operation', async (ctx) => {
   }
 });
 
+stackRouter.put('/:endpoint/:name', async (ctx) => {
+  const server = await RemoteManage.getServer(ctx.params.endpoint);
+  if (!server) {
+    ctx.status = 404;
+    ctx.body = {
+      message: 'Server not found',
+    };
+    return;
+  }
+  try {
+    ctx.body = await new RemoteRequest(server).request('stack/update', {
+      stackName: ctx.params.name,
+      name: ctx.request.body.name,
+      composeFile: ctx.request.body.composeFile,
+      envFile: ctx.request.body.envFile,
+    });
+  } catch (e: any) {
+    ctx.status = 500;
+    ctx.body = {
+      message: e.message,
+    };
+  }
+});
+
 export default stackRouter;

@@ -2,6 +2,8 @@ import { StackOperation, Stacks, StackStatus } from 'common/dist/types/stacks';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { spawn } from 'promisify-child-process';
+import * as yaml from 'js-yaml';
+import { spawnSync } from 'child_process';
 
 class Stack {
   private readonly name: string;
@@ -9,8 +11,9 @@ class Stack {
   private readonly workDir: string;
   private readonly managed: boolean;
 
-  private readonly composeFile: string = '';
-  private readonly envFile: string = '';
+  private composeFile: string = '';
+  private envFile: string = '';
+  private verified: boolean = false;
 
   constructor(name: string, composeFilePath: string) {
     this.name = name;
@@ -33,6 +36,9 @@ class Stack {
     this.envFile = fs.readFileSync(path.join(this.workDir, '.env'), {
       encoding: 'utf-8',
     });
+
+    const res = spawnSync('docker', ['compose', '-f', this.composeFilePath, 'config']);
+    this.verified = res.status === 0;
   }
 
   async getInfo(): Promise<Stacks> {
@@ -48,6 +54,7 @@ class Stack {
   }
 
   async status(): Promise<StackStatus> {
+    if (!this.verified) return 'warning';
     const res = await spawn('docker', ['compose', '-f', this.composeFilePath, 'ps', '-a', '--format', 'json'], {
       encoding: 'utf-8',
       shell: true,
@@ -83,29 +90,42 @@ class Stack {
   }
 
   async getOperationCmd(operation: StackOperation) {
+    if (!this.verified) {
+      return 'echo "The stacks is not verified"!';
+    }
     switch (operation) {
       case 'up':
-        return ['compose', '-f', this.composeFilePath, 'up', '-d'];
+        return `docker compose -f ${this.composeFilePath} up -d`;
       case 'down':
-        return ['compose', '-f', this.composeFilePath, 'down'];
+        return `docker compose -f ${this.composeFilePath} down`;
       case 'restart':
-        return ['compose', '-f', this.composeFilePath, 'restart'];
+        return `docker compose -f ${this.composeFilePath} restart`;
       case 'update':
-        return [
-          'compose',
-          '-f',
-          this.composeFilePath,
-          'pull',
-          '&&',
-          'docker',
-          'compose',
-          '-f',
-          this.composeFilePath,
-          'up',
-          '-d',
-        ];
+        return `docker compose -f ${this.composeFilePath} pull && docker compose -f ${this.composeFilePath} up -d`;
     }
-    return null;
+  }
+
+  async updateConfig(envFile: string, composeFile: string, name: string) {
+    try {
+      yaml.load(composeFile);
+    } catch (e: any) {
+      return 'Invalid compose file, ' + e.message;
+    }
+    if (this.managed) {
+      fs.writeFileSync(this.composeFilePath, composeFile);
+      const res = spawnSync('docker', ['compose', '-f', this.composeFilePath, 'config']);
+      if (res.status !== 0) {
+        fs.writeFileSync(this.composeFilePath, this.composeFile);
+        return res.stderr.toString();
+      }
+
+      fs.writeFileSync(path.join(this.workDir, '.env'), envFile);
+      this.envFile = envFile;
+      this.composeFile = composeFile;
+      this.verified = true;
+      return null;
+    }
+    return 'This stack not managed by docker mng';
   }
 }
 

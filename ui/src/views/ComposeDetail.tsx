@@ -52,7 +52,18 @@ const ComposeDetail: React.FC = () => {
 
   const updateCompose = (stack: Stacks) => {
     console.log('submit, ', stack);
-    setEdit(false);
+    ApiRequest.put(`/stacks/${params.endpoint}/${params.name}`, {
+      data: {
+        name: stack.name,
+        composeFile: stack.composeFile,
+        envFile: stack.envFile,
+      },
+    }).then((res) => {
+      if (res.data.ok) {
+        setEdit(false);
+        handleOperation('up');
+      }
+    });
   };
 
   return (
@@ -108,9 +119,13 @@ const ComposeDetail: React.FC = () => {
                 <Button icon={<UpdateRotation />} onClick={() => handleOperation('update')}>
                   更新
                 </Button>
-                <Button icon={<DocumentFolder />}>数据管理</Button>
-                <Button icon={<Save />}>备份</Button>
-                <Button danger icon={<Delete />}>
+                <Button disabled icon={<DocumentFolder />}>
+                  数据管理
+                </Button>
+                <Button disabled icon={<Save />}>
+                  备份
+                </Button>
+                <Button disabled danger icon={<Delete />}>
                   删除
                 </Button>
               </Flex>
