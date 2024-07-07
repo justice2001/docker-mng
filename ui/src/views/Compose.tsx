@@ -6,19 +6,22 @@ import StatusBadge from '../component/StatusBadge';
 import { StackStatusMap, stringToColor, textColor } from '../utils/stack-utils';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import { Plus } from '@icon-park/react';
+import { Plus, Refresh } from '@icon-park/react';
 import { Stacks } from 'common/dist/types/stacks';
 import apiRequest from '../api/api-request.ts';
 import { v4 } from 'uuid';
 import { NodeData } from 'common/dist/types/daemon';
 import './compose.css';
+import ComposeEdit from '../component/compose/compose-edit/ComposeEdit.tsx';
 
 const ComposeView: React.FC = () => {
   const navigate = useNavigate();
   const [stack, setStack] = useState<Stacks[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const [composeAdd, setComposeAdd] = useState(false);
+
+  const loadStacks = () => {
     setStack([]);
     setLoading(true);
     apiRequest.get('/overview/servers').then((res) => {
@@ -38,7 +41,9 @@ const ComposeView: React.FC = () => {
         setLoading(false);
       });
     });
-  }, []);
+  };
+
+  useEffect(loadStacks, []);
 
   const gridView: ProListProps<Stacks> = {
     grid: {
@@ -87,8 +92,24 @@ const ComposeView: React.FC = () => {
     },
   };
 
+  const addSubmit = (values: Stacks) => {
+    console.log(values);
+    apiRequest
+      .post(`/stacks/${values.endpoint}`, {
+        name: values.name,
+        envFile: values.envFile,
+        composeFile: values.composeFile,
+      })
+      .then((_) => {
+        loadStacks();
+        setComposeAdd(false);
+      });
+  };
+
   return (
     <>
+      <ComposeEdit open={composeAdd} onSubmit={addSubmit} onClose={() => setComposeAdd(false)} isAdd />
+
       <ProList<Stacks>
         loading={loading}
         headerTitle={'堆栈列表'}
@@ -96,8 +117,11 @@ const ComposeView: React.FC = () => {
         rowKey={(_) => v4()}
         {...gridView}
         toolBarRender={() => [
-          <Button type={'primary'} icon={<Plus />}>
+          <Button type={'primary'} icon={<Plus />} onClick={() => setComposeAdd(true)}>
             添加
+          </Button>,
+          <Button icon={<Refresh />} onClick={loadStacks}>
+            刷新
           </Button>,
           <Input prefix={<SearchOutlined />} placeholder={'Search'} />,
           <Segmented

@@ -28,3 +28,15 @@ export type Service = {
 export type ComposeEnv = Record<string, string>;
 
 export type StackOperation = 'up' | 'down' | 'restart' | 'update';
+
+/**
+ * Docker Compose堆栈拓展属性
+ */
+export type StackExtend = {
+  name?: string;
+  // endpoint仅用于编辑
+  endpoint?: string;
+  icon?: string;
+  tags?: string[];
+  protected?: boolean;
+};

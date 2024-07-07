@@ -22,10 +22,11 @@ export default class RemoteRequest {
 
       // Timeout
       setTimeout(() => {
-        reject({ err: 'request timeout' });
+        reject('request timeout');
       }, 3000);
 
       socket.on(event, (res: IPacket<any>) => {
+        logger.debug(`receive socket: ${event} -> ${JSON.stringify(res)}`, 'remote');
         if (res.uuid !== uuid) {
           return;
         }

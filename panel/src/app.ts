@@ -20,6 +20,7 @@ async function main() {
     logger.info(`Received request: [${ctx.method}] ${ctx.url}`);
     logger.debug(`Received request: [${ctx.method}] ${ctx.url} data: ${JSON.stringify(ctx.request.body)}`);
     await next();
+    logger.debug(`Response content: [${ctx.method}] ${ctx.url} data: ${JSON.stringify(ctx.response.body)}`);
   });
 
   mountRouters(app);

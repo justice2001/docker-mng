@@ -31,6 +31,29 @@ stackRouter.get('/:endpoint', async (ctx) => {
   }
 });
 
+stackRouter.post('/:endpoint', async (ctx) => {
+  const server = await RemoteManage.getServer(ctx.params.endpoint);
+  if (!server) {
+    ctx.status = 404;
+    ctx.body = {
+      message: 'Server not found',
+    };
+    return;
+  }
+  try {
+    ctx.body = await new RemoteRequest(server).request('stack/create', {
+      name: ctx.request.body.name,
+      composeFile: ctx.request.body.composeFile,
+      envFile: ctx.request.body.envFile,
+    });
+  } catch (e: any) {
+    ctx.status = 500;
+    ctx.body = {
+      message: e,
+    };
+  }
+});
+
 stackRouter.get('/:endpoint/:name', async (ctx) => {
   const server = await RemoteManage.getServer(ctx.params.endpoint);
   if (!server) {
@@ -41,7 +64,9 @@ stackRouter.get('/:endpoint/:name', async (ctx) => {
     return;
   }
   try {
-    ctx.body = await new RemoteRequest(server).request('stack/get', ctx.params.name);
+    const stack = await new RemoteRequest(server).request('stack/get', ctx.params.name);
+    stack.endpoint = ctx.params.endpoint;
+    ctx.body = stack;
   } catch (e: any) {
     ctx.status = 500;
     ctx.body = {

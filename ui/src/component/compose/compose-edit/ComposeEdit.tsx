@@ -1,31 +1,29 @@
-import { Flex, Input, Modal, Segmented, Select } from 'antd';
+import { Flex, Form, Input, Modal, Segmented, Select, Switch } from 'antd';
 import { useEffect, useState } from 'react';
 import apiRequest from '../../../api/api-request';
-import { Stacks } from 'common/dist/types/stacks';
+import { StackExtend, Stacks } from 'common/dist/types/stacks';
 import { Editor } from '@monaco-editor/react';
 import { AxiosResponse } from 'axios';
 import './editor.css';
+import { useForm } from 'antd/es/form/Form';
 
 interface ComposeEditProps {
-  endpoint: string;
-  name: string;
+  endpoint?: string;
+  name?: string;
   open: boolean;
+  isAdd?: boolean;
   onSubmit: (config: Stacks) => void;
   onClose: () => void;
 }
 
 const ComposeEdit: React.FC<ComposeEditProps> = (props) => {
   const [data, setData] = useState<Stacks | null>(null);
-  const [mode, setMode] = useState('code');
+  const [mode, setMode] = useState('loading');
   const [type, setType] = useState('compose');
 
-  const nameChange = (ev: any) => {
-    console.log(ev);
-    setData((prev) => {
-      if (!prev) return prev;
-      return { ...prev, name: ev.currentTarget.value };
-    });
-  };
+  // Columns
+  const [baseForm] = useForm();
+  const [serverList, setServerList] = useState([]);
 
   const updateFile = (value: string | undefined) => {
     setData((prev) => {
@@ -43,15 +41,54 @@ const ComposeEdit: React.FC<ComposeEditProps> = (props) => {
     console.log(props);
     if (props.open) {
       console.log('open');
+      if (props.isAdd) {
+        setData({
+          endpoint: '',
+          name: '',
+          icon: '',
+          tags: [],
+          state: 'unknown',
+          composeFile: '',
+          envFile: '',
+        });
+        setType('compose');
+        setMode('base');
+        // Get Server List for endpoint select
+        apiRequest.get('/overview/servers').then((res: AxiosResponse) => {
+          setServerList(res.data.servers.map((item: any) => ({ label: item.nodeName, value: item.nodeName })));
+        });
+        return;
+      }
       apiRequest.get(`/stacks/${props.endpoint}/${props.name}`).then((res: AxiosResponse) => {
         setData(res.data);
         setType('compose');
+        setMode('base');
       });
     }
   }, [props.open]);
 
   const submit = () => {
-    props.onSubmit(data!);
+    baseForm.validateFields().then((values: StackExtend) => {
+      const submitData = data!;
+      submitData.name = values.name || '';
+      submitData.endpoint = values.endpoint || '';
+      clear();
+      props.onSubmit(submitData!);
+    });
+  };
+
+  const clear = () => {
+    setData({
+      endpoint: '',
+      name: '',
+      icon: '',
+      tags: [],
+      state: 'unknown',
+      composeFile: '',
+      envFile: '',
+    });
+
+    setMode('loading');
   };
 
   const editorValue = () => {
@@ -77,42 +114,70 @@ const ComposeEdit: React.FC<ComposeEditProps> = (props) => {
     <>
       <Modal
         open={props.open}
-        title={<Input disabled size={'small'} style={{ width: 140 }} value={data?.name} onChange={nameChange} />}
+        title={props.isAdd ? '创建堆栈' : `编辑堆栈 - ${data?.name}`}
         width="80%"
         onOk={submit}
-        onCancel={props.onClose}
+        onCancel={() => {
+          clear();
+          props.onClose();
+        }}
       >
         <Flex justify="space-between">
           <Segmented
             options={[
+              { label: '基础配置', value: 'base' },
               { label: '堆栈配置', value: 'stack', disabled: true },
-              { label: '平台配置', value: 'other', disabled: true },
               { label: '代码', value: 'code' },
             ]}
             value={mode}
             onChange={setMode}
           />
-          <Select
-            options={[
-              { label: 'Compose', value: 'compose' },
-              { label: '环境变量', value: 'env' },
-            ]}
-            value={type}
-            onChange={setType}
-          ></Select>
+          {mode === 'code' && (
+            <Select
+              options={[
+                { label: 'Compose', value: 'compose' },
+                { label: '环境变量', value: 'env' },
+              ]}
+              value={type}
+              onChange={setType}
+            ></Select>
+          )}
         </Flex>
-        <Editor
-          className="editor"
-          height={400}
-          value={editorValue()}
-          language={language()}
-          onChange={updateFile}
-          options={{
-            domReadOnly: true,
-            readOnly: false,
-            scrollBeyondLastLine: false,
-          }}
-        />
+        {mode === 'base' && (
+          <div className="editor">
+            <Form layout="vertical" form={baseForm}>
+              <Form.Item<StackExtend> label={'name'} name="name">
+                <Input disabled={!props.isAdd} defaultValue={data?.name}></Input>
+              </Form.Item>
+              <Form.Item<StackExtend> label={'endpoint'} name="endpoint">
+                <Select disabled={!props.isAdd} defaultValue={data?.endpoint} options={serverList}></Select>
+              </Form.Item>
+              <Form.Item<StackExtend> label={'icon'} name="icon">
+                <Input disabled defaultValue={data?.icon}></Input>
+              </Form.Item>
+              <Form.Item<StackExtend> label={'tags'} name="tags">
+                <Select disabled mode="tags" defaultValue={data?.tags} style={{ width: '100%' }} />
+              </Form.Item>
+              <Form.Item<StackExtend> label={'protected'} name="protected">
+                <Switch disabled />
+              </Form.Item>
+            </Form>
+          </div>
+        )}
+        {mode === 'code' && (
+          <Editor
+            className="editor"
+            height={400}
+            value={editorValue()}
+            language={language()}
+            onChange={updateFile}
+            options={{
+              domReadOnly: true,
+              readOnly: false,
+              scrollBeyondLastLine: false,
+            }}
+          />
+        )}
       </Modal>
     </>
   );

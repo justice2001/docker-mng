@@ -32,6 +32,16 @@ routerApp.on('stack/get', async (ctx, data) => {
   response(ctx, await stack.getInfo());
 });
 
+routerApp.on('stack/create', async (ctx, data) => {
+  const { name, envFile, composeFile } = data;
+  try {
+    const stack = await StackManager.addStack(name, envFile, composeFile);
+    response(ctx, await stack.getInfo());
+  } catch (e: any) {
+    response(ctx, e.message, false);
+  }
+});
+
 routerApp.on('stack/logs', async (ctx, data) => {
   const token = await SingleUseToken.auth(data, 'compose-logs');
   if (!token) {

@@ -50,6 +50,15 @@ class StackManager {
       }
     }
   }
+
+  async addStack(name: string, envFile: string, composeFile: string) {
+    const newStack = new Stack(name, path.join(stackPath, name, 'compose.yaml'));
+    if (newStack) {
+      await newStack.create(envFile, composeFile);
+    }
+    this.stackList.set(name, newStack);
+    return newStack;
+  }
 }
 
 export default new StackManager();
