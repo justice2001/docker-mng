@@ -14,9 +14,11 @@ import { NodeData } from 'common/dist/types/daemon';
 import './compose.css';
 import ComposeEdit from '../component/compose/compose-edit/ComposeEdit.tsx';
 
+let stacks: Stacks[] = [];
+
 const ComposeView: React.FC = () => {
   const navigate = useNavigate();
-  const [stack, setStack] = useState<Stacks[]>([]);
+  const [filteredStacks, setFilteredStacks] = useState<Stacks[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [composeAdd, setComposeAdd] = useState(false);
@@ -24,7 +26,7 @@ const ComposeView: React.FC = () => {
   const host = window.location.host;
 
   const loadStacks = () => {
-    setStack([]);
+    stacks = [];
     setLoading(true);
     apiRequest.get('/overview/servers').then((res) => {
       const servers = res.data.servers as NodeData[];
@@ -38,11 +40,23 @@ const ComposeView: React.FC = () => {
           }
         }),
       ).then((res) => {
-        const stacks = res.flatMap((stack) => stack);
-        setStack(stacks);
+        stacks = res.flatMap((stack) => stack);
+        setFilteredStacks(stacks);
         setLoading(false);
       });
     });
+  };
+
+  const search = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setFilteredStacks(
+      stacks.filter(
+        (st) =>
+          st.name.includes(value) ||
+          st.endpoint.includes(value) ||
+          st.tags.filter((tag) => tag.includes(value)).length > 0,
+      ),
+    );
   };
 
   useEffect(loadStacks, []);
@@ -132,7 +146,7 @@ const ComposeView: React.FC = () => {
       <ProList<Stacks>
         loading={loading}
         headerTitle={'堆栈列表'}
-        dataSource={stack}
+        dataSource={filteredStacks}
         rowKey={(_) => v4()}
         {...gridView}
         toolBarRender={() => [
@@ -142,7 +156,7 @@ const ComposeView: React.FC = () => {
           <Button icon={<Refresh />} onClick={loadStacks}>
             刷新
           </Button>,
-          <Input prefix={<SearchOutlined />} placeholder={'Search'} />,
+          <Input prefix={<SearchOutlined />} placeholder={'Search'} onChange={search} />,
           <Segmented
             options={[
               { label: '', value: 'List', icon: <BarsOutlined /> },
