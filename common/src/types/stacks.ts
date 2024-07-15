@@ -4,7 +4,10 @@ export type Stacks = {
   name: string;
   icon: string;
   tags: string[];
+  protected: boolean;
+  links: string[];
   endpoint: string;
+  address?: string;
   state: StackStatus;
   envFile?: string;
   composeFile?: string;

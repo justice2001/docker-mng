@@ -6,7 +6,7 @@ import StatusBadge from '../component/StatusBadge';
 import { StackStatusMap, stringToColor, textColor } from '../utils/stack-utils';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import { Plus, Refresh } from '@icon-park/react';
+import { Api, Plus, Refresh } from '@icon-park/react';
 import { Stacks } from 'common/dist/types/stacks';
 import apiRequest from '../api/api-request.ts';
 import { v4 } from 'uuid';
@@ -20,6 +20,8 @@ const ComposeView: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const [composeAdd, setComposeAdd] = useState(false);
+
+  const host = window.location.host;
 
   const loadStacks = () => {
     setStack([]);
@@ -68,8 +70,20 @@ const ComposeView: React.FC = () => {
           return (
             <Space direction={'vertical'}>
               <Space>
-                <LinkOutlined />
-                <a href={'//localhost:8080'}>8080</a>
+                <Api />
+                <a href={`//${row.address || host}:8080`}>8080</a>
+              </Space>
+              <Space>
+                {row.links.length > 0 && (
+                  <>
+                    <LinkOutlined />
+                    {row.links.map((link) => (
+                      <a href={`//${link}`} target="_blank">
+                        {link}
+                      </a>
+                    ))}
+                  </>
+                )}
               </Space>
               <Flex gap={'4px 0'} wrap>
                 <Tag color={'processing'}>{row.endpoint}</Tag>
@@ -87,7 +101,12 @@ const ComposeView: React.FC = () => {
         },
       },
       actions: {
-        render: () => [<a>编辑</a>, <a>删除</a>],
+        render: (_, row) => {
+          if (row.protected) {
+            return [<Tag color={'error'}>保护</Tag>];
+          }
+          return [<a>编辑</a>, <a>删除</a>];
+        },
       },
     },
   };

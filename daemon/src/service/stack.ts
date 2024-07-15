@@ -5,6 +5,7 @@ import { spawn } from 'promisify-child-process';
 import * as yaml from 'js-yaml';
 import { spawnSync } from 'child_process';
 import logger from 'common/dist/core/logger';
+import * as process from 'node:process';
 
 class Stack {
   private readonly name: string;
@@ -18,6 +19,8 @@ class Stack {
 
   private icon: string = '';
   private tags: string[] = [];
+  private links: string[] = [];
+  private protected: boolean = false;
 
   constructor(name: string, composeFilePath: string) {
     this.name = name;
@@ -71,6 +74,7 @@ class Stack {
     if (!compose) {
       return;
     }
+    this.links = [];
     if ('x-dockge' in compose || 'x-dm' in compose) {
       const extendProperties = compose['x-dockge'] || compose['x-dm'];
       logger.debug(`find extend properties: ${JSON.stringify(extendProperties)}`);
@@ -79,6 +83,42 @@ class Stack {
       }
       if ('icon' in extendProperties) {
         this.icon = extendProperties['icon'];
+      }
+      if ('links' in extendProperties) {
+        if (typeof extendProperties['links'] === 'string') {
+          this.links.push(extendProperties['links']);
+        } else if (Array.isArray(extendProperties['links'])) {
+          this.links = extendProperties['links'];
+        }
+      }
+      if ('protected' in extendProperties) {
+        this.protected = extendProperties['protected'];
+      }
+    }
+    // 判断label的traefik标签
+    if (process.env.ENABLE_TRAEFIK === 'true') {
+      logger.debug(`Start traefik link detect`, this.name);
+      if ('services' in compose) {
+        for (const service in compose['services']) {
+          if ('labels' in compose['services'][service]) {
+            const labels = compose['services'][service]['labels'];
+            if (Array.isArray(labels)) {
+              for (const label of labels) {
+                try {
+                  if (label.startsWith('traefik.http.routers.') && label.split(/[.=]/)[4] === 'rule') {
+                    const rule = label.split('=')[1];
+                    const reg = /Host\(["'](.+?)["']\)/g;
+                    let match: RegExpExecArray | null = null;
+                    while ((match = reg.exec(rule)) !== null) {
+                      this.links.push(match[1]);
+                      logger.debug(`Find matched link: ${match[1]}`, this.name);
+                    }
+                  }
+                } catch (e) {}
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -93,6 +133,8 @@ class Stack {
       state: await this.status(),
       envFile: this.envFile,
       composeFile: this.composeFile,
+      links: this.links,
+      protected: this.protected,
     };
   }
 
@@ -148,7 +190,7 @@ class Stack {
     }
   }
 
-  async updateConfig(envFile: string, composeFile: string, name: string) {
+  async updateConfig(envFile: string, composeFile: string, _name: string) {
     try {
       yaml.load(composeFile);
     } catch (e: any) {

@@ -3,7 +3,6 @@ import { ProCard } from '@ant-design/pro-components';
 import { Button, Flex, Space } from 'antd';
 import { Delete, DocumentFolder, Edit, PlayOne, Save, Square, UpdateRotation } from '@icon-park/react';
 import Editor from '../component/Editor.tsx';
-import { Stack } from '../types/Stacks.ts';
 import Avatar from 'antd/es/avatar/avatar';
 import StatusBadge from '../component/StatusBadge.tsx';
 import { StackStatusMap } from '../utils/stack-utils.ts';
@@ -18,7 +17,7 @@ import './compose.css';
 const ComposeDetail: React.FC = () => {
   const params = useParams();
 
-  const [stack, setStack] = React.useState<Stack>({
+  const [stack, setStack] = React.useState<Stacks>({
     name: '',
     composeFile: '',
     envFile: '',
@@ -26,6 +25,8 @@ const ComposeDetail: React.FC = () => {
     icon: '',
     endpoint: '',
     tags: [],
+    links: [],
+    protected: false,
   });
   const [edit, setEdit] = React.useState(false);
   const [reconnectKey, setReconnectKey] = React.useState(0);
@@ -104,31 +105,44 @@ const ComposeDetail: React.FC = () => {
           extra={
             <>
               <Flex gap={10}>
-                {stack.state !== 'running' && (
-                  <Button type={'primary'} icon={<PlayOne />} onClick={() => handleOperation('up')}>
-                    启动
-                  </Button>
+                {stack.protected ? (
+                  <>
+                    <Button disabled icon={<DocumentFolder />}>
+                      数据管理
+                    </Button>
+                    <Button disabled icon={<Save />}>
+                      备份
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    {stack.state !== 'running' && (
+                      <Button type={'primary'} icon={<PlayOne />} onClick={() => handleOperation('up')}>
+                        启动
+                      </Button>
+                    )}
+                    {stack.state === 'running' && (
+                      <Button type={'primary'} danger icon={<Square />} onClick={() => handleOperation('down')}>
+                        停止
+                      </Button>
+                    )}
+                    <Button icon={<Edit />} onClick={() => setEdit(true)}>
+                      编辑
+                    </Button>
+                    <Button icon={<UpdateRotation />} onClick={() => handleOperation('update')}>
+                      更新
+                    </Button>
+                    <Button disabled icon={<DocumentFolder />}>
+                      数据管理
+                    </Button>
+                    <Button disabled icon={<Save />}>
+                      备份
+                    </Button>
+                    <Button disabled danger icon={<Delete />}>
+                      删除
+                    </Button>
+                  </>
                 )}
-                {stack.state === 'running' && (
-                  <Button type={'primary'} danger icon={<Square />} onClick={() => handleOperation('down')}>
-                    停止
-                  </Button>
-                )}
-                <Button icon={<Edit />} onClick={() => setEdit(true)}>
-                  编辑
-                </Button>
-                <Button icon={<UpdateRotation />} onClick={() => handleOperation('update')}>
-                  更新
-                </Button>
-                <Button disabled icon={<DocumentFolder />}>
-                  数据管理
-                </Button>
-                <Button disabled icon={<Save />}>
-                  备份
-                </Button>
-                <Button disabled danger icon={<Delete />}>
-                  删除
-                </Button>
               </Flex>
             </>
           }

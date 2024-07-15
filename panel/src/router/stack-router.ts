@@ -21,6 +21,9 @@ stackRouter.get('/:endpoint', async (ctx) => {
     const resp = (await new RemoteRequest(server).request('stack/list', {})) as Stacks[];
     resp.forEach((stack) => {
       stack.endpoint = ctx.params.endpoint;
+      if (!stack.address) {
+        stack.address = server.getServerInfo()?.nodeIp;
+      }
     });
     ctx.body = resp;
   } catch (e: any) {
@@ -66,6 +69,9 @@ stackRouter.get('/:endpoint/:name', async (ctx) => {
   try {
     const stack = await new RemoteRequest(server).request('stack/get', ctx.params.name);
     stack.endpoint = ctx.params.endpoint;
+    if (!stack.address) {
+      stack.address = server.getServerInfo()?.nodeIp;
+    }
     ctx.body = stack;
   } catch (e: any) {
     ctx.status = 500;
