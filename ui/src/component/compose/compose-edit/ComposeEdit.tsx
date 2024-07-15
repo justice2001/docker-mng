@@ -50,6 +50,8 @@ const ComposeEdit: React.FC<ComposeEditProps> = (props) => {
           state: 'unknown',
           composeFile: '',
           envFile: '',
+          links: [],
+          protected: false,
         });
         setType('compose');
         setMode('base');
@@ -86,6 +88,8 @@ const ComposeEdit: React.FC<ComposeEditProps> = (props) => {
       state: 'unknown',
       composeFile: '',
       envFile: '',
+      links: [],
+      protected: false,
     });
 
     setMode('loading');
