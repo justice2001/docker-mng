@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 import { ServerConfig } from '../services/remote-manage';
-import logger from 'common/dist/logger';
+import logger from 'common/dist/core/logger';
 import { configPath, panelConfig } from 'common/dist/core/base-path';
 
 export type ConfigurationData = {
