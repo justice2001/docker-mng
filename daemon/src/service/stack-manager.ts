@@ -1,9 +1,10 @@
 import Stack from './stack';
 import logger from 'common/dist/core/logger';
-import { Stacks } from 'common/dist/types/stacks';
+import { Stacks, StackStatus } from 'common/dist/types/stacks';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { stackPath } from 'common/dist/core/base-path';
+import * as child_process from 'node:child_process';
 
 class StackManager {
   private readonly stackList: Map<string, Stack>;
@@ -27,10 +28,35 @@ class StackManager {
 
   async getAllStackInfo() {
     const stacks: Stacks[] = [];
+    const statusMap = await this.getAllStackStatus();
     for (const stack of this.stackList.values()) {
-      stacks.push(await stack.getInfo());
+      const stackInfo = await stack.getInfo();
+      stackInfo.state = statusMap[stackInfo.name] || 'unknown';
+      stacks.push(stackInfo);
     }
     return stacks;
+  }
+
+  async getAllStackStatus(): Promise<{ [key: string]: StackStatus }> {
+    const res = child_process.spawnSync('docker', ['compose', 'ls', '--all', '--format', 'json'], {
+      encoding: 'utf-8',
+    });
+    if (!res.stdout) {
+      return {};
+    }
+    const status: Record<string, StackStatus> = {};
+    JSON.parse(res.stdout).map((stack: any) => {
+      if (stack.Status.startsWith('running')) {
+        status[stack.Name] = 'running';
+      } else if (stack.Status.startsWith('exited')) {
+        status[stack.Name] = 'stopped';
+      } else if (stack.Status.startsWith('created')) {
+        status[stack.Name] = 'stopped';
+      } else {
+        status[stack.Name] = 'unknown';
+      }
+    });
+    return status;
   }
 
   async loadStack() {

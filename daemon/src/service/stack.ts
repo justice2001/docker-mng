@@ -130,7 +130,7 @@ class Stack {
       icon: this.icon,
       tags: this.tags,
       endpoint: '',
-      state: await this.status(),
+      state: 'unknown',
       envFile: this.envFile,
       composeFile: this.composeFile,
       links: this.links,

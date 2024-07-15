@@ -5,7 +5,6 @@ import { IPty, spawn } from '@homebridge/node-pty-prebuilt-multiarch';
 import logger from 'common/dist/core/logger';
 import { StackOperation } from 'common/dist/types/stacks';
 import { SINGLE_AUTH_OPERATION } from 'common/dist/types/auth';
-import Stack from '../service/stack';
 
 routerApp.on('stack/list', async (ctx) => {
   const stacks = await StackManager.getAllStackInfo();
@@ -29,7 +28,9 @@ routerApp.on('stack/get', async (ctx, data) => {
     );
     return;
   }
-  response(ctx, await stack.getInfo());
+  const info = await stack.getInfo();
+  info.state = await stack.status();
+  response(ctx, info);
 });
 
 routerApp.on('stack/create', async (ctx, data) => {
