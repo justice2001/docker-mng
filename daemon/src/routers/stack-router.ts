@@ -63,7 +63,7 @@ routerApp.on('stack/logs', async (ctx, data) => {
   async function startProcess(composePath: string) {
     logger.debug(`compose process launching, cmd: docker compose -f ${composePath} logs -f`, ctx.socket.id);
 
-    process = spawn('docker', ['compose', '-f', composePath, 'logs', '-f'], {
+    process = spawn('docker', ['compose', '-f', composePath, 'logs', '--tail', '200', '-f'], {
       encoding: 'utf-8',
       cols: 60,
       rows: 80,
