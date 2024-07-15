@@ -6,6 +6,7 @@ import * as yaml from 'js-yaml';
 import { spawnSync } from 'child_process';
 import logger from 'common/dist/core/logger';
 import * as process from 'node:process';
+import { getLabelHost } from '../treafik/label-utils';
 
 class Stack {
   private readonly name: string;
@@ -102,21 +103,7 @@ class Stack {
         for (const service in compose['services']) {
           if ('labels' in compose['services'][service]) {
             const labels = compose['services'][service]['labels'];
-            if (Array.isArray(labels)) {
-              for (const label of labels) {
-                try {
-                  if (label.startsWith('traefik.http.routers.') && label.split(/[.=]/)[4] === 'rule') {
-                    const rule = label.split('=')[1];
-                    const reg = /Host\(["'](.+?)["']\)/g;
-                    let match: RegExpExecArray | null = null;
-                    while ((match = reg.exec(rule)) !== null) {
-                      this.links.push(match[1]);
-                      logger.debug(`Find matched link: ${match[1]}`, this.name);
-                    }
-                  }
-                } catch (e) {}
-              }
-            }
+            this.links.push(...getLabelHost(labels));
           }
         }
       }
