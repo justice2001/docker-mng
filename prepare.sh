@@ -12,3 +12,4 @@ pnpm link ../common
 
 cd ../ui
 pnpm install
+pnpm link ../common
