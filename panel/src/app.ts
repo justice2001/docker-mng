@@ -6,6 +6,7 @@ import { mountRouters } from './router';
 import serve from 'koa-static';
 import logger from 'common/dist/core/logger';
 import path from 'node:path';
+import historyApiFallback from 'koa2-connect-history-api-fallback';
 
 async function main() {
   logger.info('Docker Manager version 1.0.0');
@@ -13,6 +14,7 @@ async function main() {
 
   const app: Koa = new Koa();
 
+  app.use(historyApiFallback({ whiteList: ['/api'] }));
   app.use(serve(path.join(__dirname, 'public')));
   app.use(bodyParser());
 
