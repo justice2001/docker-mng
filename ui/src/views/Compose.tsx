@@ -3,7 +3,7 @@ import { Button, Flex, Input, Segmented, Space, Tag } from 'antd';
 import { AppstoreOutlined, BarsOutlined, LinkOutlined, SearchOutlined } from '@ant-design/icons';
 import Avatar from 'antd/es/avatar/avatar';
 import StatusBadge from '../component/StatusBadge';
-import { StackStatusMap, stringToColor, textColor } from '../utils/stack-utils';
+import { StackStatusMap } from '../utils/stack-utils';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { Api, Plus, Refresh } from '@icon-park/react';
@@ -13,6 +13,10 @@ import { v4 } from 'uuid';
 import { NodeData } from 'common/dist/types/daemon';
 import './compose.css';
 import ComposeEdit from '../component/compose/compose-edit/ComposeEdit.tsx';
+import ServerOutlined from '../icon/ServerOutlined.tsx';
+import ColorTag from '../component/color-tag/ColorTag.tsx';
+
+type ShowType = 'list' | 'grid';
 
 let stacks: Stacks[] = [];
 
@@ -20,6 +24,7 @@ const ComposeView: React.FC = () => {
   const navigate = useNavigate();
   const [filteredStacks, setFilteredStacks] = useState<Stacks[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showType, setShowType] = useState<ShowType>('list');
 
   const [composeAdd, setComposeAdd] = useState(false);
 
@@ -100,14 +105,11 @@ const ComposeView: React.FC = () => {
                 )}
               </Space>
               <Flex gap={'4px 0'} wrap>
-                <Tag color={'processing'}>{row.endpoint}</Tag>
+                <Tag color={'geekblue'} icon={<ServerOutlined />}>
+                  {row.endpoint}
+                </Tag>
                 {row.tags.map((tag, index) => {
-                  const color = stringToColor(tag);
-                  return (
-                    <Tag key={index} color={color} style={{ color: textColor(color) }}>
-                      {tag}
-                    </Tag>
-                  );
+                  return <ColorTag key={index} tag={tag} />;
                 })}
               </Flex>
             </Space>
@@ -117,7 +119,72 @@ const ComposeView: React.FC = () => {
       actions: {
         render: (_, row) => {
           if (row.protected) {
-            return [<Tag color={'error'}>保护</Tag>];
+            return [<Tag color={'warning'}>受保护的容器</Tag>];
+          }
+          return [<a>编辑</a>, <a>删除</a>];
+        },
+      },
+    },
+  };
+
+  const listView: ProListProps<Stacks> = {
+    metas: {
+      title: {
+        render: (_dom, row) => (
+          <>
+            <div onClick={() => navigate(`/compose/${row.endpoint}/${row.name}`)}>{row.name}</div>
+          </>
+        ),
+      },
+      subTitle: {
+        render: (_dom, row) => (
+          <Flex gap={'4px 0'} wrap style={{ fontWeight: 'normal' }}>
+            <Tag icon={<ServerOutlined />} color={'geekblue'}>
+              {row.endpoint}
+            </Tag>
+            {row.tags.map((tag, index) => {
+              return <ColorTag key={index} tag={tag} />;
+            })}
+          </Flex>
+        ),
+      },
+      description: {
+        render: (_dom, row) => (
+          <>
+            <StatusBadge map={StackStatusMap} value={row.state} />
+          </>
+        ),
+      },
+      content: {
+        render: (_dom, row) => (
+          <>
+            <Space>
+              <Api />
+              <a href={`//${row.address || host}:8080`}>8080</a>
+            </Space>
+            <Space>
+              {row.links.length > 0 && (
+                <>
+                  <LinkOutlined />
+                  {row.links.map((link) => (
+                    <a href={`//${link}`} target="_blank">
+                      {link}
+                    </a>
+                  ))}
+                </>
+              )}
+            </Space>
+          </>
+        ),
+      },
+      avatar: {
+        dataIndex: 'icon',
+        render: (_dom, row) => <Avatar shape="square" src={row.icon || '/docker.png'} style={{ marginRight: 8 }} />,
+      },
+      actions: {
+        render: (_, row) => {
+          if (row.protected) {
+            return [<Tag color={'warning'}>受保护的容器</Tag>];
           }
           return [<a>编辑</a>, <a>删除</a>];
         },
@@ -148,7 +215,7 @@ const ComposeView: React.FC = () => {
         headerTitle={'堆栈列表'}
         dataSource={filteredStacks}
         rowKey={(_) => v4()}
-        {...gridView}
+        {...(showType === 'list' ? listView : gridView)}
         toolBarRender={() => [
           <Button type={'primary'} icon={<Plus />} onClick={() => setComposeAdd(true)}>
             添加
@@ -159,9 +226,10 @@ const ComposeView: React.FC = () => {
           <Input prefix={<SearchOutlined />} placeholder={'Search'} onChange={search} />,
           <Segmented
             options={[
-              { label: '', value: 'List', icon: <BarsOutlined /> },
-              { label: '', value: 'Kanban', icon: <AppstoreOutlined /> },
+              { label: '', value: 'list', icon: <BarsOutlined /> },
+              { label: '', value: 'grid', icon: <AppstoreOutlined /> },
             ]}
+            onChange={setShowType}
           />,
         ]}
       />
