@@ -5,6 +5,9 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { stackPath } from 'common/dist/core/base-path';
 import * as child_process from 'node:child_process';
+import chokidar from 'chokidar';
+
+const ALLOWED_STACK_FILES = ['compose.yaml', 'compose.yml', 'docker-compose.yaml', 'docker-compose.yml'];
 
 class StackManager {
   private readonly stackList: Map<string, Stack>;
@@ -14,6 +17,32 @@ class StackManager {
     logger.info('Loading stacks with docker compose', 'StackManager');
     this.loadStack().then((_) => {
       logger.info(`Stacks loaded! count: ${this.stackList.size}`, 'StackManager');
+      // 监听stacks文件变化
+      chokidar
+        .watch(stackPath, {
+          depth: 1,
+          alwaysStat: true,
+        })
+        .on('add', (file) => {
+          logger.debug(`There is a new file appended: ${file}`);
+          const stackName = path.basename(path.dirname(file));
+          const fileName = path.basename(file);
+          if (fileName.startsWith('.') || this.stackList.has(stackName)) return;
+          if (ALLOWED_STACK_FILES.includes(fileName)) {
+            logger.info(`New stack detected: ${stackName}`);
+            this.stackList.set(stackName, new Stack(stackName, file));
+          }
+        })
+        .on('unlink', (file) => {
+          logger.debug(`There is a file deleted: ${file}`);
+          const stackName = path.basename(path.dirname(file));
+          const fileName = path.basename(file);
+          if (fileName.startsWith('.') || !this.stackList.has(stackName)) return;
+          if (ALLOWED_STACK_FILES.includes(fileName)) {
+            logger.info(`Stack deleted: ${stackName}`);
+            this.stackList.delete(stackName);
+          }
+        });
     });
   }
 
