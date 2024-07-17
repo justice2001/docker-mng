@@ -25,6 +25,14 @@ const HomeView: React.FC = () => {
   });
 
   const [servers, setServers] = React.useState<NodeData[]>([]);
+  const [stackCount, setStackCount] = React.useState({
+    all: 0,
+    running: 0,
+    processing: 0,
+    warning: 0,
+    stopped: 0,
+    unknown: 0,
+  });
 
   const [serverCount, setServerCount] = React.useState<{
     count: number;
@@ -50,6 +58,9 @@ const HomeView: React.FC = () => {
   };
 
   const loadData = () => {
+    apiRequest.get('overview/stacks').then((res) => {
+      setStackCount(res.data);
+    });
     // 刷新 server 信息
     if (serverInterval !== -1) {
       clearInterval(serverInterval);
@@ -83,42 +94,42 @@ const HomeView: React.FC = () => {
             <StatisticCard
               statistic={{
                 title: '总计',
-                value: 20,
+                value: stackCount.all,
               }}
             />
             <StatisticCard.Divider />
             <StatisticCard
               statistic={{
-                title: '未操作',
-                value: 1,
+                title: '未部署',
+                value: stackCount.unknown,
                 status: 'default',
               }}
             />
             <StatisticCard
               statistic={{
                 title: '正在运行',
-                value: 17,
+                value: stackCount.running,
                 status: 'success',
               }}
             />
             <StatisticCard
               statistic={{
                 title: '部署中',
-                value: 0,
+                value: stackCount.processing,
                 status: 'processing',
               }}
             />
             <StatisticCard
               statistic={{
                 title: '状态异常',
-                value: 1,
+                value: stackCount.warning,
                 status: 'warning',
               }}
             />
             <StatisticCard
               statistic={{
                 title: '已停止',
-                value: 1,
+                value: stackCount.stopped,
                 status: 'error',
               }}
             />

@@ -212,7 +212,7 @@ const ComposeView: React.FC = () => {
 
       <ProList<Stacks>
         loading={loading}
-        headerTitle={'堆栈列表'}
+        headerTitle={`堆栈列表 (${filteredStacks.length})`}
         dataSource={filteredStacks}
         rowKey={(_) => v4()}
         {...(showType === 'list' ? listView : gridView)}
