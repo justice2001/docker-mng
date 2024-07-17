@@ -5,16 +5,16 @@ import { NodeInfo } from 'common/dist/types/daemon';
 import * as pty from '@homebridge/node-pty-prebuilt-multiarch';
 import SingleUseToken from '../service/single-use-token';
 import ConfigService from '../service/config-service';
-import logger from 'common/dist/core/logger';
+import { daemonVersion, dockerVersion } from '../app';
 
-routerApp.on('info', async (ctx, data) => {
+routerApp.on('info', async (ctx) => {
   const systemInfo = await getSystemInfo();
   const resp: NodeInfo = {
     cpu: systemInfo.cpu,
     memory: systemInfo.mem,
     disk: systemInfo.disk,
-    dockerVersion: '20.10.0',
-    daemonVersion: '1.0.0',
+    dockerVersion: dockerVersion,
+    daemonVersion: daemonVersion,
     nodeStatus: 'running',
   };
   response(ctx, resp);

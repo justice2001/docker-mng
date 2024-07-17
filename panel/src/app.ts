@@ -8,10 +8,9 @@ import logger from 'common/dist/core/logger';
 import path from 'node:path';
 import historyApiFallback from 'koa2-connect-history-api-fallback';
 
-async function main() {
-  logger.info('Docker Manager version 1.0.0');
-  logger.info('Daemon Version 1.0.0');
+export const panelVersion = 'v1.0.0';
 
+async function main() {
   const app: Koa = new Koa();
 
   app.use(historyApiFallback({ whiteList: ['/api'] }));
@@ -32,6 +31,15 @@ async function main() {
   const port = process.env.PORT || 3000;
 
   app.listen(port, () => {
+    console.log(`\n     _                                                _ 
+    | |                                              | |
+  __| | _ __ ___   ______  _ __    __ _  _ __    ___ | |
+ / _\` || '_ \` _ \\ |______|| '_ \\  / _\` || '_ \\  / _ \\| |
+| (_| || | | | | |        | |_) || (_| || | | ||  __/| |
+ \\__,_||_| |_| |_|        | .__/  \\__,_||_| |_| \\___||_|
+                          | |                           
+                          |_|                   
+               Panel Version: ${panelVersion}\n`);
     logger.info('App listening on port ' + port);
   });
 }

@@ -5,6 +5,13 @@ import { navigation } from './service/router';
 import logger from 'common/dist/core/logger';
 import * as fs from 'node:fs';
 import { configPath, dataPath, stackPath } from 'common/dist/core/base-path';
+import * as child_process from 'node:child_process';
+
+export const dockerVersion = child_process
+  .spawnSync('docker', ['version', '--format', '{{.Server.Version}}'])
+  .stdout.toString()
+  .trim();
+export const daemonVersion = 'v1.0.0';
 
 // 处理必要的文件夹
 if (!fs.existsSync(configPath)) {
@@ -41,5 +48,12 @@ socketServer.on('connect', (socket) => {
 });
 
 server.listen(3001, () => {
+  console.log(`\n     _                        _                                       
+  __| | _ __ ___           __| |  __ _   ___  _ __ ___    ___   _ __  
+ / _\` || '_ \` _ \\  _____  / _\` | / _\` | / _ \\| '_ \` _ \\  / _ \\ | '_ \\ 
+| (_| || | | | | ||_____|| (_| || (_| ||  __/| | | | | || (_) || | | |
+ \\__,_||_| |_| |_|        \\__,_| \\__,_| \\___||_| |_| |_| \\___/ |_| |_|
+ 
+    Daemon Version: ${daemonVersion}  |  Docker Version: ${dockerVersion}\n`);
   logger.info(`Server listening on port 3001`, 'app');
 });

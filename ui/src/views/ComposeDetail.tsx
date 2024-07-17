@@ -1,7 +1,18 @@
 import React, { useEffect } from 'react';
 import { ProCard } from '@ant-design/pro-components';
-import { Button, Flex, Space } from 'antd';
-import { Delete, DocumentFolder, Edit, PlayOne, Save, Square, UpdateRotation } from '@icon-park/react';
+import { Button, Dropdown, Flex, Space } from 'antd';
+import {
+  Close,
+  Delete,
+  DocumentFolder,
+  Edit,
+  More,
+  PlayOne,
+  Refresh,
+  Save,
+  Square,
+  UpdateRotation,
+} from '@icon-park/react';
 import Editor from '../component/Editor.tsx';
 import Avatar from 'antd/es/avatar/avatar';
 import StatusBadge from '../component/StatusBadge.tsx';
@@ -141,6 +152,30 @@ const ComposeDetail: React.FC = () => {
                     <Button disabled danger icon={<Delete />}>
                       删除
                     </Button>
+                    <Dropdown
+                      menu={{
+                        items: [
+                          {
+                            key: 'restart',
+                            label: '重启容器',
+                            icon: <Refresh />,
+                            disabled: true,
+                          },
+                          {
+                            key: 'down',
+                            label: '取消部署',
+                            icon: <Close />,
+                            disabled: true,
+                          },
+                        ],
+                        onClick: (e) => {
+                          console.log(e.key);
+                        },
+                      }}
+                      placement="bottomRight"
+                    >
+                      <Button icon={<More />} />
+                    </Dropdown>
                   </>
                 )}
               </Flex>
