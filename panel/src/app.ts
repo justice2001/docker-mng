@@ -8,7 +8,7 @@ import logger from 'common/dist/core/logger';
 import path from 'node:path';
 import historyApiFallback from 'koa2-connect-history-api-fallback';
 
-export const panelVersion = 'v1.0.0';
+export const panelVersion = '1.0.0';
 
 async function main() {
   const app: Koa = new Koa();

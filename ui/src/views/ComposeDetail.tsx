@@ -133,7 +133,7 @@ const ComposeDetail: React.FC = () => {
                       </Button>
                     )}
                     {stack.state === 'running' && (
-                      <Button type={'primary'} danger icon={<Square />} onClick={() => handleOperation('down')}>
+                      <Button type={'primary'} danger icon={<Square />} onClick={() => handleOperation('stop')}>
                         停止
                       </Button>
                     )}
@@ -152,30 +152,35 @@ const ComposeDetail: React.FC = () => {
                     <Button disabled danger icon={<Delete />}>
                       删除
                     </Button>
-                    <Dropdown
-                      menu={{
-                        items: [
-                          {
-                            key: 'restart',
-                            label: '重启容器',
-                            icon: <Refresh />,
-                            disabled: true,
+                    {!stack.protected && (
+                      <Dropdown
+                        menu={{
+                          items: [
+                            {
+                              key: 'restart',
+                              label: '重启容器',
+                              icon: <Refresh />,
+                              disabled: stack.state !== 'running',
+                            },
+                            {
+                              key: 'down',
+                              label: '取消部署',
+                              icon: <Close />,
+                              disabled: stack.state !== 'running',
+                            },
+                          ],
+                          onClick: (e) => {
+                            const key = e.key;
+                            if (['restart', 'down'].includes(key)) {
+                              handleOperation(key as StackOperation);
+                            }
                           },
-                          {
-                            key: 'down',
-                            label: '取消部署',
-                            icon: <Close />,
-                            disabled: true,
-                          },
-                        ],
-                        onClick: (e) => {
-                          console.log(e.key);
-                        },
-                      }}
-                      placement="bottomRight"
-                    >
-                      <Button icon={<More />} />
-                    </Dropdown>
+                        }}
+                        placement="bottomRight"
+                      >
+                        <Button icon={<More />} />
+                      </Dropdown>
+                    )}
                   </>
                 )}
               </Flex>

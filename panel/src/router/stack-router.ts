@@ -116,7 +116,7 @@ stackRouter.get('/:endpoint/:name/operation/:operation', async (ctx) => {
     };
     return;
   }
-  if (!['up', 'down', 'restart', 'update'].includes(ctx.params.operation)) {
+  if (!['up', 'stop', 'down', 'restart', 'update'].includes(ctx.params.operation)) {
     ctx.status = 401;
     ctx.body = {
       message: 'Operation not allowed!',

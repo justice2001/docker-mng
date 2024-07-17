@@ -170,6 +170,8 @@ class Stack {
         return `docker compose -f ${this.composeFilePath} up -d`;
       case 'down':
         return `docker compose -f ${this.composeFilePath} down`;
+      case 'stop':
+        return `docker compose -f ${this.composeFilePath} stop`;
       case 'restart':
         return `docker compose -f ${this.composeFilePath} restart`;
       case 'update':

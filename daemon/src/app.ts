@@ -11,7 +11,7 @@ export const dockerVersion = child_process
   .spawnSync('docker', ['version', '--format', '{{.Server.Version}}'])
   .stdout.toString()
   .trim();
-export const daemonVersion = 'v1.0.0';
+export const daemonVersion = '1.0.0';
 
 // 处理必要的文件夹
 if (!fs.existsSync(configPath)) {
