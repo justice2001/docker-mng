@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { ProCard } from '@ant-design/pro-components';
-import { Button, Dropdown, Flex, Space } from 'antd';
+import { Button, Dropdown, Flex, Space, Tag } from 'antd';
 import {
   Close,
   Delete,
@@ -15,15 +15,21 @@ import {
 } from '@icon-park/react';
 import Editor from '../component/Editor.tsx';
 import Avatar from 'antd/es/avatar/avatar';
-import StatusBadge from '../component/StatusBadge.tsx';
-import { StackStatusMap } from '../utils/stack-utils.ts';
 import ApiRequest from '../api/api-request.ts';
 import { useParams } from 'react-router-dom';
 import ComposeLog from '../component/ComposeLog.tsx';
 import ComposeEdit from '../component/compose/compose-edit/ComposeEdit.tsx';
-import { StackOperation, Stacks } from 'common/dist/types/stacks';
+import { StackOperation, Stacks, StackStatus } from 'common/dist/types/stacks';
 import ComposeOperation from '../component/compose/compose-operation/ComposeOperation.tsx';
 import './compose.css';
+import { parseCompose } from 'common/dist/utils/compose-utils';
+import { Compose } from 'common/dist/types/compose';
+import ContainerInfo from '../component/compose/container-info/ContainerInfoProps.tsx';
+import ServerOutlined from '../icon/ServerOutlined.tsx';
+import ColorTag from '../component/color-tag/ColorTag.tsx';
+import { LinkOutlined } from '@ant-design/icons';
+import './compose-detail.css';
+import StatusTag from '../component/status-tag/StatusTag.tsx';
 
 const ComposeDetail: React.FC = () => {
   const params = useParams();
@@ -39,6 +45,9 @@ const ComposeDetail: React.FC = () => {
     links: [],
     protected: false,
   });
+  const [status, setStatus] = React.useState<{ [key: string]: StackStatus }>({});
+
+  const [compose, setCompose] = React.useState<Compose>({});
   const [edit, setEdit] = React.useState(false);
   const [reconnectKey, setReconnectKey] = React.useState(0);
 
@@ -60,6 +69,11 @@ const ComposeDetail: React.FC = () => {
   const getInfo = () => {
     ApiRequest.get(`/stacks/${params.endpoint}/${params.name}`).then((res) => {
       setStack(res.data);
+      const parsedCompose = parseCompose(res.data.composeFile);
+      setCompose(parsedCompose);
+    });
+    ApiRequest.get(`/stacks/${params.endpoint}/${params.name}/status`).then((res) => {
+      setStatus(res.data);
     });
   };
 
@@ -103,15 +117,37 @@ const ComposeDetail: React.FC = () => {
       <Space direction={'vertical'} style={{ width: '100%' }}>
         <ProCard
           title={
-            <>
+            <Flex vertical gap={5}>
               <Flex gap={5} align={'center'}>
                 <Avatar size={'large'} src={stack.icon || '/docker.png'} style={{ marginRight: 8 }} />
-                <Flex vertical>
-                  <span style={{ marginRight: 8 }}>{stack.name}</span>
-                  <StatusBadge map={StackStatusMap} value={stack.state} />
+                <Flex vertical gap={5}>
+                  <Flex gap={3} align={'center'}>
+                    <span style={{ marginRight: 8 }}>{stack.name}</span>
+                    <Flex align={'center'}>
+                      {stack.links.length > 0 && (
+                        <Flex gap={3} className={'stack-link'}>
+                          <LinkOutlined />
+                          {stack.links.map((link) => (
+                            <a href={`//${link}`} target="_blank">
+                              {link}
+                            </a>
+                          ))}
+                        </Flex>
+                      )}
+                    </Flex>
+                  </Flex>
+                  <Flex gap={5} align={'center'}>
+                    <StatusTag status={stack.state} />
+                    <Tag icon={<ServerOutlined />} color={'geekblue'}>
+                      {stack.endpoint}
+                    </Tag>
+                    {stack.tags.map((tag, index) => {
+                      return <ColorTag key={index} tag={tag} />;
+                    })}
+                  </Flex>
                 </Flex>
               </Flex>
-            </>
+            </Flex>
           }
           extra={
             <>
@@ -188,6 +224,20 @@ const ComposeDetail: React.FC = () => {
           }
         >
           <ComposeLog endpoint={endpoint} name={name} key={reconnectKey} />
+        </ProCard>
+        <ProCard title={'堆栈信息'}>
+          <Flex gap={10} vertical>
+            {Object.entries(compose?.services || {}).map(([key, service]) => (
+              <ContainerInfo
+                compose={service}
+                name={key}
+                endpoint={stack.address || 'localhost'}
+                status={
+                  status[key] || status[service.container_name || ''] || status[`${stack.name}-${key}-1`] || 'unknown'
+                }
+              />
+            ))}
+          </Flex>
         </ProCard>
         <ProCard title={'Compose配置'}>
           <Editor value={stack.composeFile} />

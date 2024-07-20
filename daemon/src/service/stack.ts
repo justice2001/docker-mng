@@ -126,6 +126,34 @@ class Stack {
     };
   }
 
+  async allStatus(): Promise<{ [key: string]: StackStatus | 'unknown' }> {
+    if (!this.verified) return {};
+    const res = await spawn('docker', ['compose', '-f', this.composeFilePath, 'ps', '-a', '--format', 'json'], {
+      encoding: 'utf-8',
+      shell: true,
+    });
+    if (!res.stdout) {
+      return {};
+    }
+    const containers = res.stdout
+      .toString()
+      .split('\n')
+      .filter((container) => container.length > 0)
+      .map((container) => {
+        return JSON.parse(container);
+      });
+    return containers.reduce((acc, container) => {
+      if (container.State === 'running') {
+        acc[container.Name] = 'running';
+      } else if (container.State === 'exited') {
+        acc[container.Name] = 'stopped';
+      } else {
+        acc[container.Name] = 'unknown';
+      }
+      return acc;
+    }, {});
+  }
+
   async status(): Promise<StackStatus> {
     if (!this.verified) return 'warning';
     const res = await spawn('docker', ['compose', '-f', this.composeFilePath, 'ps', '-a', '--format', 'json'], {

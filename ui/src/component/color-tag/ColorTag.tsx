@@ -5,6 +5,7 @@ import { borderColor, stringToColor, textColor } from '../../utils/stack-utils.t
 
 interface ColorTagProps {
   tag: string;
+  children?: React.ReactNode;
 }
 
 const ColorTag: React.FC<ColorTagProps> = (props: ColorTagProps) => {
@@ -15,7 +16,7 @@ const ColorTag: React.FC<ColorTagProps> = (props: ColorTagProps) => {
       color={color}
       style={{ color: textColor(props.tag), border: `1px solid ${borderColor(props.tag)}` }}
     >
-      {props.tag}
+      {props.children || props.tag}
     </Tag>
   );
 };

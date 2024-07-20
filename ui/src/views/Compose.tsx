@@ -6,7 +6,7 @@ import StatusBadge from '../component/StatusBadge';
 import { StackStatusMap } from '../utils/stack-utils';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import { Api, Plus, Refresh } from '@icon-park/react';
+import { Plus, Refresh } from '@icon-park/react';
 import { Stacks } from 'common/dist/types/stacks';
 import apiRequest from '../api/api-request.ts';
 import { v4 } from 'uuid';
@@ -15,6 +15,7 @@ import './compose.css';
 import ComposeEdit from '../component/compose/compose-edit/ComposeEdit.tsx';
 import ServerOutlined from '../icon/ServerOutlined.tsx';
 import ColorTag from '../component/color-tag/ColorTag.tsx';
+import StatusTag from '../component/status-tag/StatusTag.tsx';
 
 type ShowType = 'list' | 'grid';
 
@@ -27,9 +28,6 @@ const ComposeView: React.FC = () => {
   const [showType, setShowType] = useState<ShowType>('list');
 
   const [composeAdd, setComposeAdd] = useState(false);
-
-  const host = window.location.host;
-
   const loadStacks = () => {
     stacks = [];
     setLoading(true);
@@ -89,10 +87,6 @@ const ComposeView: React.FC = () => {
           return (
             <Space direction={'vertical'}>
               <Space>
-                <Api />
-                <a href={`//${row.address || host}:8080`}>8080</a>
-              </Space>
-              <Space>
                 {row.links.length > 0 && (
                   <>
                     <LinkOutlined />
@@ -136,9 +130,10 @@ const ComposeView: React.FC = () => {
           </>
         ),
       },
-      subTitle: {
+      description: {
         render: (_dom, row) => (
           <Flex gap={'4px 0'} wrap style={{ fontWeight: 'normal' }}>
+            <StatusTag status={row.state} />
             <Tag icon={<ServerOutlined />} color={'geekblue'}>
               {row.endpoint}
             </Tag>
@@ -148,20 +143,9 @@ const ComposeView: React.FC = () => {
           </Flex>
         ),
       },
-      description: {
-        render: (_dom, row) => (
-          <>
-            <StatusBadge map={StackStatusMap} value={row.state} />
-          </>
-        ),
-      },
       content: {
         render: (_dom, row) => (
           <>
-            <Space>
-              <Api />
-              <a href={`//${row.address || host}:8080`}>8080</a>
-            </Space>
             <Space>
               {row.links.length > 0 && (
                 <>
