@@ -7,6 +7,7 @@ import { spawnSync } from 'child_process';
 import logger from 'common/dist/core/logger';
 import * as process from 'node:process';
 import { getLabelHost } from '../treafik/label-utils';
+import { dataPath } from 'common/dist/core/base-path';
 
 class Stack {
   private readonly name: string;
@@ -193,6 +194,10 @@ class Stack {
         return res.stderr.toString();
       }
 
+      // 加入数据目录
+      if (!envFile.includes('DATA=')) {
+        envFile = `DM_DATA=${await this.getDataDir()}\n` + envFile;
+      }
       fs.writeFileSync(path.join(this.workDir, '.env'), envFile);
       this.envFile = envFile;
       this.composeFile = composeFile;
@@ -203,6 +208,10 @@ class Stack {
       return null;
     }
     return 'This stack not managed by docker mng';
+  }
+
+  async getDataDir() {
+    return path.join(dataPath, this.name);
   }
 }
 

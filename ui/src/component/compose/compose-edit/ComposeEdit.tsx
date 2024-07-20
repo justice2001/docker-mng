@@ -6,6 +6,7 @@ import { Editor } from '@monaco-editor/react';
 import { AxiosResponse } from 'axios';
 import './editor.css';
 import { useForm } from 'antd/es/form/Form';
+import { Tips } from '@icon-park/react';
 
 interface ComposeEditProps {
   endpoint?: string;
@@ -147,6 +148,12 @@ const ComposeEdit: React.FC<ComposeEditProps> = (props) => {
             ></Select>
           )}
         </Flex>
+        {['stack', 'code'].includes(mode) && (
+          <p style={{ color: '#999999' }}>
+            <Tips style={{ marginRight: 5 }} />
+            使用 DM_DATA 环境变量来配置数据目录，该目录可以通过 dm 管理
+          </p>
+        )}
         {mode === 'base' && (
           <div className="editor">
             <Form layout="vertical" form={baseForm}>
