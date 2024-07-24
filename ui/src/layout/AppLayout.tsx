@@ -1,15 +1,12 @@
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { Dropdown, Space } from 'antd';
 import {
-  AppstoreOutlined,
   ContainerOutlined,
+  DashboardOutlined,
   HomeOutlined,
-  InboxOutlined,
   InfoCircleOutlined,
   KeyOutlined,
   LogoutOutlined,
-  SaveOutlined,
-  SettingOutlined,
 } from '@ant-design/icons';
 import { PageContainer, ProCard, ProLayout } from '@ant-design/pro-components';
 
@@ -33,34 +30,34 @@ const AppLayout: React.FC = () => {
     routes: [
       {
         path: '/',
-        name: 'Home',
-        icon: <HomeOutlined />,
+        name: '概览',
+        icon: <DashboardOutlined />,
       },
       {
         path: '/compose',
-        name: 'Compose',
+        name: '堆栈',
         icon: <ContainerOutlined />,
       },
-      {
-        path: '/images',
-        name: 'Images',
-        icon: <InboxOutlined />,
-      },
-      {
-        path: '/backups',
-        name: 'Backups',
-        icon: <SaveOutlined />,
-      },
-      {
-        path: '/store',
-        name: 'App Store',
-        icon: <AppstoreOutlined />,
-      },
-      {
-        path: '/settings',
-        name: 'Settings',
-        icon: <SettingOutlined />,
-      },
+      // {
+      //   path: '/images',
+      //   name: 'Images',
+      //   icon: <InboxOutlined />,
+      // },
+      // {
+      //   path: '/backups',
+      //   name: 'Backups',
+      //   icon: <SaveOutlined />,
+      // },
+      // {
+      //   path: '/store',
+      //   name: 'App Store',
+      //   icon: <AppstoreOutlined />,
+      // },
+      // {
+      //   path: '/settings',
+      //   name: 'Settings',
+      //   icon: <SettingOutlined />,
+      // },
     ],
   };
 

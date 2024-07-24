@@ -43,3 +43,8 @@
 ## 架构图
 
 ![Architecture](./docs/architecture.png)
+
+## 截图
+
+<img src="docs/home.png" width="48%" alt="Home">
+<img src="docs/stacks.png" width="48%" alt="Stack">
