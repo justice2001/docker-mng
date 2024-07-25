@@ -9,6 +9,15 @@
 
 该工具计划用于在我的服务器上替代 Dockge，同时也是学习下 TS 后端的开发和 React 框架的使用。
 
+## 特点
+
+- 可视化的 compose 操作
+- 实时的日志展示
+- 支持连接多个节点
+- dockge 扩展属性支持
+- 支持应用图标、标签，支持禁用容器编辑
+- 支持自动识别 traefik label，展示域名
+
 ## 计划的功能
 
 - [ ] 仪表盘
@@ -46,5 +55,15 @@
 
 ## 截图
 
-<img src="docs/home.png" width="48%" alt="Home">
-<img src="docs/stacks.png" width="48%" alt="Stack">
+
+
+<table>
+<tr>
+<td><img src="docs/home.png" alt="Home"></td>
+<td><img src="docs/stacks.png" alt="Stack"></td>
+</tr>
+<tr>
+<td><img src="docs/compose.png" alt="Compose"></td>
+<td></td>
+</tr>
+</table>
