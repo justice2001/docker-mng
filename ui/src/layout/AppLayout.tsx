@@ -7,10 +7,12 @@ import {
   InfoCircleOutlined,
   KeyOutlined,
   LogoutOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 import { PageContainer, ProCard, ProLayout } from '@ant-design/pro-components';
 
 import DocketLogo from '../assets/docker.svg';
+import React from 'react';
 
 const AppLayout: React.FC = () => {
   const navigate = useNavigate();
@@ -94,6 +96,14 @@ const AppLayout: React.FC = () => {
                       key: 'about',
                       icon: <InfoCircleOutlined />,
                       label: '关于',
+                    },
+                    {
+                      key: '/settings',
+                      icon: <SettingOutlined />,
+                      label: '设置',
+                      onClick: () => {
+                        navigate('/settings');
+                      },
                     },
                   ],
                 }}

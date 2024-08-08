@@ -7,8 +7,8 @@ import Home from './views/Home';
 import Images from './views/Images';
 import Backups from './views/Backups';
 import AppStore from './views/AppStore';
-import { SettingOutlined } from '@ant-design/icons';
 import ComposeDetail from './views/ComposeDetail.tsx';
+import Settings from './views/Settings.tsx';
 
 const routeConfig = createBrowserRouter([
   {
@@ -41,7 +41,7 @@ const routeConfig = createBrowserRouter([
       },
       {
         path: '/settings',
-        element: <SettingOutlined />,
+        element: <Settings />,
       },
     ],
   },
