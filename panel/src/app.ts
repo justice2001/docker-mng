@@ -19,6 +19,7 @@ async function main() {
 
   app.use(async (ctx, next) => {
     logger.info(`Received request: [${ctx.method}] ${ctx.url}`);
+    logger.debug(`Received headers: ${JSON.stringify(ctx.headers)}`);
     logger.debug(`Received request: [${ctx.method}] ${ctx.url} data: ${JSON.stringify(ctx.request.body)}`);
     await next();
     logger.debug(`Response content: [${ctx.method}] ${ctx.url} data: ${JSON.stringify(ctx.response.body)}`);
@@ -31,12 +32,11 @@ async function main() {
   const port = process.env.PORT || 3000;
 
   app.listen(port, () => {
-    console.log(`\n      _                       ____                           _ 
+    console.log(`\n      _                       ____                           _
    __| |  _ __ ___           |  _ \\    __ _   _ __     ___  | |
   / _\` | | '_ \` _ \\   _____  | |_) |  / _\` | | '_ \\   / _ \\ | |
  | (_| | | | | | | | |_____| |  __/  | (_| | | | | | |  __/ | |
   \\__,_| |_| |_| |_|         |_|      \\__,_| |_| |_|  \\___| |_|
-                                                               
 
                Panel Version: ${panelVersion}\n`);
     logger.info('App listening on port ' + port);

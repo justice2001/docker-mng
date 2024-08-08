@@ -79,18 +79,8 @@ const ComposeDetail: React.FC = () => {
 
   const updateCompose = (stack: Stacks) => {
     console.log('submit, ', stack);
-    ApiRequest.put(`/stacks/${params.endpoint}/${params.name}`, {
-      data: {
-        name: stack.name,
-        composeFile: stack.composeFile,
-        envFile: stack.envFile,
-      },
-    }).then((res) => {
-      if (res.data.ok) {
-        setEdit(false);
-        handleOperation('up');
-      }
-    });
+    setEdit(false);
+    handleOperation('up');
   };
 
   return (

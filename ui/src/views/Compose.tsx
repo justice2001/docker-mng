@@ -178,16 +178,8 @@ const ComposeView: React.FC = () => {
 
   const addSubmit = (values: Stacks) => {
     console.log(values);
-    apiRequest
-      .post(`/stacks/${values.endpoint}`, {
-        name: values.name,
-        envFile: values.envFile,
-        composeFile: values.composeFile,
-      })
-      .then((_) => {
-        loadStacks();
-        setComposeAdd(false);
-      });
+    loadStacks();
+    setComposeAdd(false);
   };
 
   return (
