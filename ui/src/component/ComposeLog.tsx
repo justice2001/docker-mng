@@ -77,6 +77,8 @@ const ComposeLog: React.FC<XTerminalProps> = (props) => {
 
     window.addEventListener('load', handleResize);
 
+    handleResize();
+
     return () => {
       socket?.disconnect();
       socket = null;

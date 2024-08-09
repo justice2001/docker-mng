@@ -1,9 +1,8 @@
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
-import { Dropdown, Space } from 'antd';
+import { Dropdown } from 'antd';
 import {
   ContainerOutlined,
   DashboardOutlined,
-  HomeOutlined,
   InfoCircleOutlined,
   KeyOutlined,
   LogoutOutlined,
@@ -135,17 +134,7 @@ const AppLayout: React.FC = () => {
         logo={DocketLogo}
         layout={'mix'}
       >
-        <PageContainer
-          ghost
-          header={{
-            title: (
-              <Space>
-                <HomeOutlined />
-                <span>页面</span>
-              </Space>
-            ),
-          }}
-        >
+        <PageContainer ghost>
           <ProCard direction="column" ghost gutter={[0, 16]}>
             <Outlet />
           </ProCard>

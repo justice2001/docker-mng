@@ -9,6 +9,7 @@ import Backups from './views/Backups';
 import AppStore from './views/AppStore';
 import ComposeDetail from './views/ComposeDetail.tsx';
 import Settings from './views/Settings.tsx';
+import DataManagement from './views/DataManagement.tsx';
 
 const routeConfig = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const routeConfig = createBrowserRouter([
       {
         path: '/compose/:endpoint/:name',
         element: <ComposeDetail />,
+      },
+      {
+        path: '/compose/:endpoint/:name/data',
+        element: <DataManagement />,
       },
       {
         path: '/images',
