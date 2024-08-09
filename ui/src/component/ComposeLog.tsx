@@ -14,12 +14,12 @@ type XTerminalProps = {
 let socket: Socket | null = null;
 
 const ComposeLog: React.FC<XTerminalProps> = (props) => {
-  const terminalRef = useRef(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
 
   const terminal = new Terminal({
     fontFamily: 'Menlo, Monaco, "Courier New", monospace',
     disableStdin: false,
-    cols: 160,
+    fontSize: 14,
   });
 
   let inited = false;
@@ -52,6 +52,30 @@ const ComposeLog: React.FC<XTerminalProps> = (props) => {
     if (!socket || !socket.connected) {
       connect();
     }
+
+    const handleResize = () => {
+      if (!terminalRef.current) return;
+      const clientWidth = terminalRef.current.clientWidth;
+
+      const span = document.createElement('span');
+      span.style.fontFamily = terminal.options.fontFamily || 'monospace';
+      span.style.fontSize = '14px';
+      span.style.visibility = 'hidden';
+      span.style.whiteSpace = 'nowrap';
+      span.textContent = 'W';
+      document.body.appendChild(span);
+
+      const charWidth = span.getBoundingClientRect().width;
+      document.body.removeChild(span);
+      const newCols = Math.floor(clientWidth / charWidth) - 3;
+
+      terminal.resize(newCols, terminal.rows);
+    };
+
+    // 监听resize
+    window.addEventListener('resize', handleResize);
+
+    window.addEventListener('load', handleResize);
 
     return () => {
       socket?.disconnect();
