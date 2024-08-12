@@ -10,9 +10,10 @@ interface ContainerInfoProps {
   name: string;
   endpoint: string;
   status: StackStatus;
+  onBash: (service: string) => void;
 }
 
-const ContainerInfo = ({ compose, name, endpoint, status }: ContainerInfoProps) => {
+const ContainerInfo = ({ compose, name, endpoint, status, onBash }: ContainerInfoProps) => {
   return (
     <>
       <Card size="small">
@@ -34,7 +35,7 @@ const ContainerInfo = ({ compose, name, endpoint, status }: ContainerInfoProps) 
               })}
             </Flex>
           </Flex>
-          <Button disabled type={'primary'} icon={<Terminal />}>
+          <Button disabled={status !== 'running'} onClick={() => onBash(name)} type={'primary'} icon={<Terminal />}>
             Bash
           </Button>
         </Flex>

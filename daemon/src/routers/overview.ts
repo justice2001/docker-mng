@@ -6,6 +6,7 @@ import * as pty from '@homebridge/node-pty-prebuilt-multiarch';
 import SingleUseToken from '../service/single-use-token';
 import ConfigService from '../service/config-service';
 import { daemonVersion, dockerVersion } from '../app';
+import StackManager from '../service/stack-manager';
 
 routerApp.on('info', async (ctx) => {
   const systemInfo = await getSystemInfo();
@@ -35,6 +36,21 @@ routerApp.on('terminal', async (ctx, data) => {
   if (token.info === 'bash') {
     cmd = ConfigService.getConfig('defaultBash');
     args = ['--login'];
+  } else if (token.info.startsWith('stack')) {
+    const [_, stack, service, type = 'bash'] = token.info.split('|');
+    if (!stack || !service) {
+      ctx.socket.emit('data', 'Invalid stack or service');
+      ctx.socket.disconnect();
+      return;
+    }
+    const stacks = await StackManager.getStack(stack);
+    if (!stacks) {
+      ctx.socket.emit('data', 'Stack not found!');
+      ctx.socket.disconnect();
+      return;
+    }
+    cmd = 'docker';
+    args = ['compose', '-f', await stacks.getComposePath(), 'exec', service, `/bin/${type}`];
   } else {
     ctx.socket.emit('data', 'Unsupported terminal type');
     ctx.socket.disconnect();

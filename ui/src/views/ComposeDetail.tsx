@@ -30,6 +30,7 @@ import ColorTag from '../component/color-tag/ColorTag.tsx';
 import { LinkOutlined } from '@ant-design/icons';
 import './compose-detail.css';
 import StatusTag from '../component/status-tag/StatusTag.tsx';
+import BashTerminalModalRef from '../component/terminal/BashTerminalModal.tsx';
 
 const ComposeDetail: React.FC = () => {
   const params = useParams();
@@ -53,6 +54,9 @@ const ComposeDetail: React.FC = () => {
 
   const [opOpen, setOpOpen] = React.useState(false);
   const [operation, setOperation] = React.useState<StackOperation>('up');
+
+  const [terminalOpen, setTerminalOpen] = React.useState(false);
+  const [terminalServices, setTerminalServices] = React.useState<string>('');
 
   const handleOperation = (operation: StackOperation) => {
     setOperation(operation);
@@ -83,8 +87,20 @@ const ComposeDetail: React.FC = () => {
     handleOperation('up');
   };
 
+  const openTerminal = (services: string) => {
+    setTerminalServices(`stack|${name}|${services}`);
+    setTerminalOpen(true);
+  };
+
   return (
     <>
+      <BashTerminalModalRef
+        open={terminalOpen}
+        endpoint={endpoint}
+        name={terminalServices}
+        onClose={() => setTerminalOpen(false)}
+      />
+
       <ComposeEdit
         open={edit}
         endpoint={endpoint}
@@ -225,6 +241,7 @@ const ComposeDetail: React.FC = () => {
                 status={
                   status[key] || status[service.container_name || ''] || status[`${stack.name}-${key}-1`] || 'unknown'
                 }
+                onBash={openTerminal}
               />
             ))}
           </Flex>

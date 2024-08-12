@@ -12,7 +12,8 @@ terminalRouter.get('/:endpoint/:name', async (ctx) => {
   if (server) {
     const resp = await new RemoteRequest(server).request('auth/single-token', {
       permission: 'terminal',
-      info: 'bash',
+      // bash则为命令行，进入容器bash则使用｜分隔，如 nginx|nginx_pri|bash
+      info: ctx.params.name,
     });
     ctx.body = {
       socket: server.getSocketUrl(),
