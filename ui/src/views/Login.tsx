@@ -5,13 +5,22 @@ import dockerLogo from '../assets/docker.svg';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
 import './login.css';
+import apiRequest from '../api/api-request.ts';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
 
-  const loginHandler = () => {
-    window.localStorage.setItem('user', '1');
-    navigate('/', { replace: true });
+  const loginHandler = (form: any) => {
+    console.log(form);
+    apiRequest
+      .post('/auth/login', {
+        username: form.username,
+        password: form.password,
+      })
+      .then((res) => {
+        localStorage.setItem('token', res.data.token);
+        navigate('/', { replace: true });
+      });
   };
   return (
     <>

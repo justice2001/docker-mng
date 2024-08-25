@@ -2,15 +2,20 @@ import * as fs from 'node:fs';
 import { ServerConfig } from '../services/remote-manage';
 import logger from 'common/dist/core/logger';
 import { configPath, panelConfig } from 'common/dist/core/base-path';
+import { generateSecrets } from '../utils/random-utils';
 
 export type ConfigurationData = {
-  token: string;
+  secret: string;
   serverList: ServerConfig[];
+  username: string;
+  password: string;
 };
 
 const defaultConfig: ConfigurationData = {
-  token: '',
+  secret: generateSecrets(32),
   serverList: [],
+  username: 'admin',
+  password: '$2a$10$40vhxUEULq/TTiuMc93qGO0.sN2mc.95mC76KtMSZ9GwL0JSaMgnm',
 };
 
 class Configuration {
@@ -35,7 +40,14 @@ class Configuration {
   }
 
   getConfig(key: keyof ConfigurationData) {
-    return this.config[key];
+    if (this.config[key]) {
+      logger.debug(`Get Config: ${key} = ${this.config[key]}`);
+      return this.config[key];
+    } else {
+      const newConfig = defaultConfig[key];
+      this.updateConfig(key, newConfig);
+      return newConfig;
+    }
   }
 
   updateConfig(key: keyof ConfigurationData, value: any) {

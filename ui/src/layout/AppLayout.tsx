@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Dropdown } from 'antd';
 import {
   ContainerOutlined,
@@ -15,11 +15,6 @@ import React from 'react';
 
 const AppLayout: React.FC = () => {
   const navigate = useNavigate();
-
-  const user = window.localStorage.getItem('user');
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
 
   const logout = () => {
     window.localStorage.removeItem('user');

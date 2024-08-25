@@ -19,9 +19,19 @@ class ApiRequest {
     try {
       return await this._axios.request({
         url: url,
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
         ...options,
       });
     } catch (e: any) {
+      if (e.response.status === 401) {
+        message.error('登录已过期，请重新登录！');
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 1000);
+        return;
+      }
       if (e.response.data) {
         message.error('请求接口失败: ' + e.response.data.message);
       } else {

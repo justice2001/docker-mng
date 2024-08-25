@@ -7,6 +7,7 @@ import serve from 'koa-static';
 import logger from 'common/dist/core/logger';
 import path from 'node:path';
 import historyApiFallback from 'koa2-connect-history-api-fallback';
+import { authMiddleware } from './middlewares/auth-middleware';
 
 export const panelVersion = '1.0.0';
 
@@ -24,6 +25,8 @@ async function main() {
     await next();
     logger.debug(`Response content: [${ctx.method}] ${ctx.url} data: ${JSON.stringify(ctx.response.body)}`);
   });
+
+  app.use(authMiddleware);
 
   mountRouters(app);
 
