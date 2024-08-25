@@ -7,6 +7,10 @@ import SingleUseToken from '../service/single-use-token';
 import ConfigService from '../service/config-service';
 import { daemonVersion, dockerVersion } from '../app';
 import StackManager from '../service/stack-manager';
+import * as process from 'node:process';
+import * as child_process from 'node:child_process';
+import logger from 'common/dist/core/logger';
+import * as path from 'node:path';
 
 routerApp.on('info', async (ctx) => {
   const systemInfo = await getSystemInfo();
@@ -76,4 +80,33 @@ routerApp.on('terminal', async (ctx, data) => {
   ctx.socket.on('disconnect', () => {
     console.log('terminal disconnect');
   });
+});
+
+routerApp.on('update', async (ctx, data) => {
+  // const host = process.env.HOSTNAME;
+  const host = process.env.HOSTNAME;
+  logger.info(`Host name: ${host}`, 'updater');
+  try {
+    const containerInfo = child_process.execSync(`docker inspect ${host} --format json`, { encoding: 'utf-8' });
+    const infoJson = JSON.parse(containerInfo);
+    const labels = infoJson[0].Config.Labels;
+    if (labels['com.docker.compose.project.config_files']) {
+      const composeFile = labels['com.docker.compose.project.config_files'];
+      logger.info(`Found docker compose file: ${composeFile}`);
+      const basename = path.dirname(composeFile);
+      const updateCmd = `docker run -itd --rm --name=selfupdate \
+        -v ${basename}:${basename} \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -e STACK_PATH=${composeFile} \
+        git.mczhengyi.top/zhengyi/dm-updater:latest`;
+      logger.info(`Update command: ${updateCmd}`, 'updater');
+      response(ctx, '正在执行更新容器...');
+      child_process.exec(updateCmd);
+    } else {
+      response(ctx, '暂不支持该类型容器更新!', false);
+    }
+  } catch (e) {
+    logger.error(`Update failed: ${e}`, 'updater');
+    response(ctx, '寻找容器失败！', false);
+  }
 });

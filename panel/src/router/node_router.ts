@@ -61,4 +61,26 @@ nodeRouter.delete('/:endpoint', async (ctx) => {
   };
 });
 
+nodeRouter.post('/:endpoint/update', async (ctx) => {
+  const server = await RemoteManage.getServer(ctx.params.endpoint);
+  if (!server) {
+    ctx.status = 404;
+    ctx.body = {
+      message: 'server not found',
+    };
+    return;
+  }
+  try {
+    await new RemoteRequest(server).request('update', {});
+    ctx.body = {
+      ok: true,
+    };
+  } catch (e: any) {
+    ctx.status = 500;
+    ctx.body = {
+      message: e.message,
+    };
+  }
+});
+
 export default nodeRouter;
