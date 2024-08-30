@@ -40,14 +40,9 @@ class AuthService {
       throw new Error('用户名或密码错误！');
     }
     // 验证密码
-    await new Promise((resolve) => {
-      bcrypt.compare(password, configuration.getConfig('password') as string, function (err, result) {
-        if (err) {
-          throw new Error('用户名或密码错误！');
-        }
-        resolve(result);
-      });
-    });
+    if (!bcrypt.compareSync(password, configuration.getConfig('password') as string)) {
+      throw new Error('用户名或密码错误！');
+    }
     // 签发Token
     const token = jwt.sign({ username }, this.secret, { expiresIn: '90d' });
     this.tokenList.push(token);

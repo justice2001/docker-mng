@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Divider, Form, Input } from 'antd';
+import { Button, Divider, Form, Input, message } from 'antd';
+import apiRequest from '../../api/api-request.ts';
 
 interface PasswordForm {
   oldPassword: string;
@@ -12,6 +13,18 @@ interface BasicForm {
 }
 
 const Security: React.FC = () => {
+  const changePassword = async (values: PasswordForm) => {
+    if (values.newPassword !== values.confirmPassword) {
+      await message.error('新密码和确认密码不一致！');
+      return;
+    }
+    const res = await apiRequest.post('/settings/updatePassword', {
+      oldPassword: values.oldPassword,
+      newPassword: values.newPassword,
+    });
+    await message.success(res.data.message || '密码修改成功！');
+  };
+
   return (
     <>
       <Form
@@ -41,6 +54,7 @@ const Security: React.FC = () => {
         style={{ maxWidth: 600 }}
         autoComplete="off"
         labelAlign={'left'}
+        onFinish={changePassword}
       >
         <Form.Item<PasswordForm>
           label="旧密码"

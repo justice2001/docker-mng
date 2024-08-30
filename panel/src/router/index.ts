@@ -5,6 +5,7 @@ import overviewRouter from './overview_routers';
 import terminalRouter from './terminal_router';
 import stackRouter from './stack-router';
 import authRouters from './auth-routers';
+import settingRouters from './setting-routers';
 
 export function mountRouters(app: Koa<Koa.DefaultState, Koa.DefaultContext>) {
   const allRouters = new Router({
@@ -15,6 +16,7 @@ export function mountRouters(app: Koa<Koa.DefaultState, Koa.DefaultContext>) {
   allRouters.use(overviewRouter.routes()).use(overviewRouter.allowedMethods());
   allRouters.use(terminalRouter.routes()).use(terminalRouter.allowedMethods());
   allRouters.use(stackRouter.routes()).use(stackRouter.allowedMethods());
+  allRouters.use(settingRouters.routes()).use(settingRouters.allowedMethods());
 
   app.use(allRouters.routes());
 }
