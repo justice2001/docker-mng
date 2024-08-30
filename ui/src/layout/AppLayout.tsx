@@ -1,13 +1,6 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Dropdown } from 'antd';
-import {
-  ContainerOutlined,
-  DashboardOutlined,
-  InfoCircleOutlined,
-  KeyOutlined,
-  LogoutOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
+import { ContainerOutlined, DashboardOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 import { PageContainer, ProCard, ProLayout } from '@ant-design/pro-components';
 
 import DocketLogo from '../assets/docker.svg';
@@ -15,12 +8,6 @@ import React from 'react';
 
 const AppLayout: React.FC = () => {
   const navigate = useNavigate();
-
-  const logout = () => {
-    window.localStorage.removeItem('user');
-    navigate('/login', { replace: true });
-  };
-
   const routes = {
     path: '/',
     routes: [
@@ -82,21 +69,20 @@ const AppLayout: React.FC = () => {
                 menu={{
                   items: [
                     {
-                      key: 'password',
-                      icon: <KeyOutlined />,
-                      label: '修改密码',
-                    },
-                    {
-                      key: 'about',
-                      icon: <InfoCircleOutlined />,
-                      label: '关于',
-                    },
-                    {
                       key: '/settings',
                       icon: <SettingOutlined />,
                       label: '设置',
                       onClick: () => {
                         navigate('/settings');
+                      },
+                    },
+                    {
+                      key: 'logout',
+                      icon: <LogoutOutlined />,
+                      label: '退出登陆',
+                      onClick: () => {
+                        window.localStorage.removeItem('token');
+                        navigate('/login');
                       },
                     },
                   ],
@@ -123,7 +109,7 @@ const AppLayout: React.FC = () => {
           if (typeof window === 'undefined') {
             return [];
           }
-          return [<LogoutOutlined onClick={logout} key="GithubFilled" />];
+          return [];
         }}
         title=""
         logo={DocketLogo}

@@ -3,8 +3,10 @@ import { Card, Tabs, TabsProps } from 'antd';
 import { InfoCircleOutlined, LockOutlined, SettingOutlined } from '@ant-design/icons';
 import About from './settings/About.tsx';
 import Security from './settings/Security.tsx';
+import { useParams } from 'react-router-dom';
 
 const Settings: React.FC = () => {
+  const { tab } = useParams();
   const items: TabsProps['items'] = [
     // {
     //   key: 'basic',
@@ -34,7 +36,7 @@ const Settings: React.FC = () => {
         </>
       }
     >
-      <Tabs items={items} defaultActiveKey={'basic'} tabPosition={'left'} />
+      <Tabs items={items} defaultActiveKey={tab || 'security'} tabPosition={'left'} />
     </Card>
   );
 };

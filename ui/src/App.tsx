@@ -45,6 +45,10 @@ const routeConfig = createBrowserRouter([
         element: <AppStore />,
       },
       {
+        path: '/settings/:tab',
+        element: <Settings />,
+      },
+      {
         path: '/settings',
         element: <Settings />,
       },

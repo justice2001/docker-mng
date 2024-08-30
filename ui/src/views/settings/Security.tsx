@@ -39,7 +39,7 @@ const Security: React.FC = () => {
           <Input />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
-          <Button type="primary" htmlType="submit">
+          <Button disabled type="primary" htmlType="submit">
             更新用户名
           </Button>
         </Form.Item>
