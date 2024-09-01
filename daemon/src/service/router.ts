@@ -3,13 +3,24 @@ import { RouterCtx } from '../entities/ctx';
 import { Socket } from 'socket.io';
 import { IPacket } from 'common/dist/types/community';
 import logger from 'common/dist/core/logger';
+import authService from './auth-service';
 
 /**
  * 路由触发器
  */
 class RouterApp extends EventEmitter {
+  authType: { [key: string]: number } = {};
+
   emitRouter(event: string, ctx: RouterCtx, data: any) {
     try {
+      if (!this.authType[event] && this.authType[event] !== 0) {
+        response(ctx, '未知的路由名称!', false);
+        return this;
+      }
+      if (this.authType[event] == 1 && !authService.check(ctx.socket.id)) {
+        response(ctx, '非法操作，请认证后再试!', false);
+        return this;
+      }
       // service logic routing trigger point
       super.emit(event, ctx, data);
     } catch (error: any) {
@@ -20,7 +31,14 @@ class RouterApp extends EventEmitter {
     return this;
   }
 
-  on(event: string, fn: (ctx: RouterCtx, data: any) => void) {
+  /**
+   * 注册路由
+   * @param event 路由标识
+   * @param fn 回调方法
+   * @param authType 认证标识：0-不需要认证，1-需要认证，2-单次密钥
+   */
+  on(event: string, fn: (ctx: RouterCtx, data: any) => void, authType: number = 1) {
+    this.authType[event] = authType;
     return super.on(event, fn);
   }
 }

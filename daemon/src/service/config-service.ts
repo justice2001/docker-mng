@@ -1,20 +1,17 @@
 import * as process from 'node:process';
 import * as fs from 'node:fs';
-import { v4 as uuidv4 } from 'uuid';
-import * as jwt from 'jsonwebtoken';
 import logger from 'common/dist/core/logger';
 import { configPath, daemonConfig } from 'common/dist/core/base-path';
+import * as crypto from 'node:crypto';
 
 type Configuration = {
   defaultBash: string;
   accessToken: string;
-  jwtSecret: string;
 };
 
 const defaultConfig: Configuration = {
   defaultBash: process.platform === 'win32' ? 'C:\\Windows\\System32\\cmd.exe' : '/bin/bash',
   accessToken: '',
-  jwtSecret: '1234567890qwertyuiopasdfghjklzxcvbnm',
 };
 
 class ConfigService {
@@ -27,10 +24,7 @@ class ConfigService {
     }
     if (!fs.existsSync(daemonConfig)) {
       // Generate Access token
-      const payload = {
-        uuid: uuidv4(),
-      };
-      defaultConfig.accessToken = jwt.sign(payload, defaultConfig.jwtSecret, {});
+      defaultConfig.accessToken = 'dm-' + crypto.randomBytes(32).toString('hex');
       fs.writeFileSync(daemonConfig, JSON.stringify(defaultConfig, null, 4));
     }
     this.config = JSON.parse(

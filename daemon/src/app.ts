@@ -6,6 +6,8 @@ import logger from 'common/dist/core/logger';
 import * as fs from 'node:fs';
 import { configPath, dataPath, stackPath } from 'common/dist/core/base-path';
 import * as child_process from 'node:child_process';
+import configService from './service/config-service';
+import authService from './service/auth-service';
 
 export const dockerVersion = child_process
   .spawnSync('docker', ['version', '--format', '{{.Server.Version}}'])
@@ -47,6 +49,11 @@ socketServer.on('connect', (socket) => {
   navigation(socket);
 });
 
+socketServer.on('disconnect', (socket) => {
+  logger.debug(`user disconnected: ${socket.id}`);
+  authService.disconnect(socket.id);
+});
+
 server.listen(3001, () => {
   console.log(`\n     _                        _                                       
   __| | _ __ ___           __| |  __ _   ___  _ __ ___    ___   _ __  
@@ -56,4 +63,5 @@ server.listen(3001, () => {
  
     Daemon Version: ${daemonVersion}  |  Docker Version: ${dockerVersion}\n`);
   logger.info(`Server listening on port 3001`, 'app');
+  logger.info(`You can use this token connect to the daemon: ${configService.getConfig('accessToken')}`);
 });

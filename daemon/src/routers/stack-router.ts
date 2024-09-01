@@ -60,101 +60,109 @@ routerApp.on('stack/create', async (ctx, data) => {
   }
 });
 
-routerApp.on('stack/logs', async (ctx, data) => {
-  const token = await SingleUseToken.auth(data, 'compose-logs');
-  if (!token) {
-    ctx.socket.emit('data', 'Unauthorized!');
-    ctx.socket.disconnect();
-    return;
-  }
+routerApp.on(
+  'stack/logs',
+  async (ctx, data) => {
+    const token = await SingleUseToken.auth(data, 'compose-logs');
+    if (!token) {
+      ctx.socket.emit('data', 'Unauthorized!');
+      ctx.socket.disconnect();
+      return;
+    }
 
-  const stack = await StackManager.getStack(token.info);
-  if (!stack) {
-    ctx.socket.emit('data', 'Stack not found!');
-    ctx.socket.disconnect();
-    return;
-  }
+    const stack = await StackManager.getStack(token.info);
+    if (!stack) {
+      ctx.socket.emit('data', 'Stack not found!');
+      ctx.socket.disconnect();
+      return;
+    }
 
-  let process: IPty | null = null;
+    let process: IPty | null = null;
 
-  async function startProcess(composePath: string) {
-    logger.debug(`compose process launching, cmd: docker compose -f ${composePath} logs -f`, ctx.socket.id);
+    async function startProcess(composePath: string) {
+      logger.debug(`compose process launching, cmd: docker compose -f ${composePath} logs -f`, ctx.socket.id);
 
-    process = spawn('docker', ['compose', '-f', composePath, 'logs', '--tail', '200', '-f'], {
+      process = spawn('docker', ['compose', '-f', composePath, 'logs', '--tail', '200', '-f'], {
+        encoding: 'utf-8',
+        cols: 60,
+        rows: 80,
+      });
+
+      process.onExit((code) => {
+        logger.debug('compose log process exited', ctx.socket.id);
+        ctx.socket.emit('data', `\x1b[1;31mProcess exited with code ${code.exitCode} \x1b[0m\r\n`);
+        if (!ctx.socket.connected) return;
+        if (code.exitCode !== 0) return;
+        setTimeout(async () => {
+          const runCount = (await stack?.runningContainerCount()) || 0;
+          if (runCount > 0) {
+            await startProcess(composePath);
+          } else {
+            ctx.socket.emit('data', '\x1b[1;31mNo containers running, exiting\x1b[0m\r\n');
+            ctx.socket.disconnect();
+          }
+        }, 1000);
+      });
+
+      process.onData((data) => {
+        ctx.socket.emit('data', data);
+      });
+    }
+
+    await startProcess(await stack.getComposePath());
+
+    ctx.socket.on('disconnect', () => {
+      process?.kill();
+      logger.debug('console log disconnect', ctx.socket.id);
+    });
+  },
+  2,
+);
+
+routerApp.on(
+  'stack/operation',
+  async (ctx, data) => {
+    const token = await SingleUseToken.auth(data, SINGLE_AUTH_OPERATION);
+    if (!token) {
+      ctx.socket.emit('data', 'Unauthorized!');
+      ctx.socket.disconnect();
+      return;
+    }
+
+    const [name, op] = token.info.split('|');
+
+    const stack = await StackManager.getStack(name);
+    if (!stack) {
+      ctx.socket.emit('data', 'Stack not found!');
+      ctx.socket.disconnect();
+      return;
+    }
+
+    const cmd = await stack.getOperationCmd(op as StackOperation);
+
+    logger.debug(`stack operation, cmd: ${cmd}`, ctx.socket.id);
+    if (!cmd) {
+      ctx.socket.emit('data', 'Operation not found!');
+      ctx.socket.disconnect();
+      return;
+    }
+
+    const iPty = spawn('bash', ['-c', cmd], {
       encoding: 'utf-8',
-      cols: 60,
-      rows: 80,
     });
 
-    process.onExit((code) => {
-      logger.debug('compose log process exited', ctx.socket.id);
-      ctx.socket.emit('data', `\x1b[1;31mProcess exited with code ${code.exitCode} \x1b[0m\r\n`);
-      if (!ctx.socket.connected) return;
-      if (code.exitCode !== 0) return;
-      setTimeout(async () => {
-        const runCount = (await stack?.runningContainerCount()) || 0;
-        if (runCount > 0) {
-          await startProcess(composePath);
-        } else {
-          ctx.socket.emit('data', '\x1b[1;31mNo containers running, exiting\x1b[0m\r\n');
-          ctx.socket.disconnect();
-        }
-      }, 1000);
-    });
-
-    process.onData((data) => {
+    iPty.onData((data) => {
       ctx.socket.emit('data', data);
     });
-  }
 
-  await startProcess(await stack.getComposePath());
-
-  ctx.socket.on('disconnect', () => {
-    process?.kill();
-    logger.debug('console log disconnect', ctx.socket.id);
-  });
-});
-
-routerApp.on('stack/operation', async (ctx, data) => {
-  const token = await SingleUseToken.auth(data, SINGLE_AUTH_OPERATION);
-  if (!token) {
-    ctx.socket.emit('data', 'Unauthorized!');
-    ctx.socket.disconnect();
-    return;
-  }
-
-  const [name, op] = token.info.split('|');
-
-  const stack = await StackManager.getStack(name);
-  if (!stack) {
-    ctx.socket.emit('data', 'Stack not found!');
-    ctx.socket.disconnect();
-    return;
-  }
-
-  const cmd = await stack.getOperationCmd(op as StackOperation);
-
-  logger.debug(`stack operation, cmd: ${cmd}`, ctx.socket.id);
-  if (!cmd) {
-    ctx.socket.emit('data', 'Operation not found!');
-    ctx.socket.disconnect();
-    return;
-  }
-
-  const iPty = spawn('bash', ['-c', cmd], {
-    encoding: 'utf-8',
-  });
-
-  iPty.onData((data) => {
-    ctx.socket.emit('data', data);
-  });
-
-  iPty.onExit((code) => {
-    logger.debug('stack operation process exited', ctx.socket.id);
-    ctx.socket.emit('data', `\x1b[0;32mProcess complated with code ${code.exitCode} \x1b[0m\r\n`);
-    ctx.socket.disconnect();
-  });
-});
+    iPty.onExit((code) => {
+      logger.debug('stack operation process exited', ctx.socket.id);
+      ctx.socket.emit('data', `\x1b[0;32mProcess complated with code ${code.exitCode} \x1b[0m\r\n`);
+      ctx.socket.disconnect();
+    });
+  },
+  2,
+);
 
 routerApp.on('stack/update', async (ctx, data) => {
   const { stackName, name, envFile, composeFile } = data;
