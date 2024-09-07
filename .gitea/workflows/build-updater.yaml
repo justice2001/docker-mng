@@ -5,7 +5,8 @@ on:
     branches:
       - dev
     paths:
-      - "update/**"
+      - "updater/**"
+      - ".gitea/workflows/build-updater"
 
 jobs:
   build:
