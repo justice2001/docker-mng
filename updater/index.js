@@ -6,14 +6,14 @@ const stackPath = process.env.STACK_PATH;
 
 console.log(`Will update ${stackPath}`);
 if (fs.existsSync(stackPath)) {
-  console.log('Found File');
+  console.log('Found compose file');
   // 执行命令docker compose pull
   let command = `docker compose -f ${stackPath} pull`;
-  console.log(`Pulling Image: ${command}`);
+  console.log(`Pulling image: ${command}`);
   execSync(command, { stdio: 'inherit' });
   command = `docker compose -f ${stackPath} up -d`;
-  console.log(`Recreate Container: ${command}`);
+  console.log(`Recreating container: ${command}`);
   execSync(command, { stdio: 'inherit' });
-  console.log('Update Success');
+  console.log('Update successful!');
   process.exit(0);
 }

@@ -105,7 +105,20 @@ routerApp.on('update', async (ctx) => {
         git.mczhengyi.top/zhengyi/dm-updater:latest`;
       logger.info(`Update command: ${updateCmd}`, 'updater');
       response(ctx, '正在执行更新容器...');
-      child_process.exec(updateCmd);
+      child_process.exec(updateCmd, (err) => {
+        if (err) {
+          logger.error(`Update failed: ${err}`, 'updater');
+          response(ctx, '更新失败！', false);
+        }
+        // Update container create successful, show container logs
+        const logsCmd = child_process.exec('docker logs -f selfupdate');
+        logsCmd.stdout?.on('data', (data) => {
+          logger.info(data.toString(), 'updater');
+        });
+        logsCmd.stderr?.on('data', (data) => {
+          logger.error(data.toString(), 'updater');
+        });
+      });
     } else {
       response(ctx, '暂不支持该类型容器更新!', false);
     }
