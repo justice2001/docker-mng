@@ -8,6 +8,7 @@ import logger from 'common/dist/core/logger';
 import * as process from 'node:process';
 import { getLabelHost } from '../treafik/label-utils';
 import { dataPath } from 'common/dist/core/base-path';
+import fileUtils from '../utils/file-utils';
 
 class Stack {
   private readonly name: string;
@@ -238,8 +239,89 @@ class Stack {
     return 'This stack not managed by docker mng';
   }
 
+  /**
+   * 获取数据目录
+   */
   async getDataDir() {
-    return path.join(dataPath, this.name);
+    const dir = path.join(dataPath, this.name);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    return dir;
+  }
+
+  async listDataDir(aPath: string) {
+    const dataDir = await this.getDataDir();
+    const rPath = path.normalize(path.join(dataDir, aPath));
+    if (!rPath.startsWith(dataDir)) {
+      throw new Error('未经授权的访问！');
+    }
+    if (!fs.existsSync(rPath) || !fs.statSync(rPath).isDirectory()) {
+      throw new Error('目录不存在！');
+    }
+    return fileUtils.getDirectoryInfo(dataDir, aPath);
+  }
+
+  async getDataFile(aPath: string) {
+    const dataDir = await this.getDataDir();
+    const rPath = path.normalize(path.join(dataDir, aPath));
+    if (!rPath.startsWith(dataDir)) {
+      throw new Error('未经授权的访问！');
+    }
+    if (!fs.existsSync(rPath) || !fs.statSync(rPath).isFile()) {
+      throw new Error('文件不存在！');
+    }
+    return fs.readFileSync(rPath);
+  }
+
+  async updateDataFile(aPath: string, data: string) {
+    const dataDir = await this.getDataDir();
+    const rPath = path.normalize(path.join(dataDir, aPath));
+    if (!rPath.startsWith(dataDir)) {
+      throw new Error('未经授权的访问！');
+    }
+    if (!fs.existsSync(rPath)) {
+      throw new Error('文件不存在！');
+    }
+    fs.writeFileSync(rPath, data);
+  }
+
+  async deleteDataFile(aPath: string) {
+    const dataDir = await this.getDataDir();
+    const rPath = path.normalize(path.join(dataDir, aPath));
+    if (!rPath.startsWith(dataDir)) {
+      throw new Error('未经授权的访问！');
+    }
+    if (!fs.existsSync(rPath)) {
+      throw new Error('文件不存在！');
+    }
+    if (fs.statSync(rPath).isDirectory()) {
+      fs.rmdirSync(rPath);
+    } else {
+      fs.rmSync(rPath);
+    }
+  }
+
+  async uploadDataFile(aPath: string, data: Buffer) {
+    const dataDir = await this.getDataDir();
+    const rPath = path.normalize(path.join(dataDir, aPath));
+    if (!rPath.startsWith(dataDir)) {
+      throw new Error('未经授权的访问！');
+    }
+    fs.writeFileSync(rPath, data);
+  }
+
+  async createDataFile(aPath: string, isDir: boolean) {
+    const dataDir = await this.getDataDir();
+    const rPath = path.normalize(path.join(dataDir, aPath));
+    if (!rPath.startsWith(dataDir)) {
+      throw new Error('未经授权的访问！');
+    }
+    if (isDir) {
+      fs.mkdirSync(rPath, { recursive: true });
+    } else {
+      fs.writeFileSync(rPath, '');
+    }
   }
 }
 

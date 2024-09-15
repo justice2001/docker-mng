@@ -83,3 +83,4 @@ export function response(ctx: RouterCtx, data: any, ok: boolean = true) {
 import '../routers/overview';
 import '../routers/auth-router';
 import '../routers/stack-router';
+import '../routers/file-router';
