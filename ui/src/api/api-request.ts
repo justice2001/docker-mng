@@ -10,6 +10,7 @@ class ApiRequest {
       timeout: 5000,
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
       responseType: 'json',
     });
@@ -17,11 +18,11 @@ class ApiRequest {
 
   async request(url: string, options: AxiosRequestConfig): Promise<any> {
     try {
+      // Object.assign(options.headers, {
+      //   Authorization: `Bearer ${localStorage.getItem('token')}`,
+      // });
       return await this._axios.request({
         url: url,
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
         ...options,
       });
     } catch (e: any) {

@@ -16,7 +16,7 @@ import {
 import Editor from '../component/Editor.tsx';
 import Avatar from 'antd/es/avatar/avatar';
 import ApiRequest from '../api/api-request.ts';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ComposeLog from '../component/ComposeLog.tsx';
 import ComposeEdit from '../component/compose/compose-edit/ComposeEdit.tsx';
 import { StackOperation, Stacks, StackStatus } from 'common/dist/types/stacks';
@@ -34,6 +34,8 @@ import BashTerminalModalRef from '../component/terminal/BashTerminalModal.tsx';
 
 const ComposeDetail: React.FC = () => {
   const params = useParams();
+
+  const navigate = useNavigate();
 
   const [stack, setStack] = React.useState<Stacks>({
     name: '',
@@ -160,7 +162,12 @@ const ComposeDetail: React.FC = () => {
               <Flex gap={10}>
                 {stack.protected ? (
                   <>
-                    <Button disabled icon={<DocumentFolder />}>
+                    <Button
+                      icon={<DocumentFolder />}
+                      onClick={() => {
+                        navigate(`/compose/${endpoint}/${name}/data`);
+                      }}
+                    >
                       数据管理
                     </Button>
                     <Button disabled icon={<Save />}>
@@ -185,7 +192,12 @@ const ComposeDetail: React.FC = () => {
                     <Button icon={<UpdateRotation />} onClick={() => handleOperation('update')}>
                       更新
                     </Button>
-                    <Button disabled icon={<DocumentFolder />}>
+                    <Button
+                      icon={<DocumentFolder />}
+                      onClick={() => {
+                        navigate(`/compose/${endpoint}/${name}/data`);
+                      }}
+                    >
                       数据管理
                     </Button>
                     <Button disabled icon={<Save />}>
