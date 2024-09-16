@@ -52,7 +52,7 @@ const HomeView: React.FC = () => {
 
   const interval = (fn: () => void) => {
     fn.apply(this);
-    return setInterval(() => {
+    return window.setInterval(() => {
       fn.apply(this);
     }, 2000);
   };
