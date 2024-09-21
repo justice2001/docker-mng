@@ -1,0 +1,57 @@
+name: build-nightly
+
+on:
+  push:
+    branches:
+      - dev
+    paths-ignore:
+      - '**/*.md'
+
+jobs:
+  build:
+    runs-on: debian-12
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Set up Node.js environment with Node.js 18.18.2
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.18.2'
+
+      # Set up pnpm environment
+      - name: Set up pnpm environment
+        uses: pnpm/action-setup@v2
+        with:
+          version: '8'
+
+      - name: Prepare environment
+        run: |
+          chmod +x ./prepare.sh
+          ./prepare.sh
+
+      - name: Build daemon & panel
+        run: |
+          pnpm run build:daemon
+          pnpm run build:panel
+          pnpm run build:ui
+
+      # Log in to Docker Registry
+      - name: Log in to Docker Registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+          registry: ${{ secrets.REGISTRY_URL }}
+
+      - name: Build & push daemon image
+        run: |
+          docker build -f ./docker/daemon.Dockerfile -t ${{ secrets.REGISTRY_URL }}/${{ secrets.REGISTRY_USERNAME }}/dm-daemon:nightly . --push
+          docker build -f ./docker/panel.Dockerfile -t ${{ secrets.REGISTRY_URL }}/${{ secrets.REGISTRY_USERNAME }}/dm-panel:nightly . --push
+
+      - name: Clean docker image
+        run: |
+          docker rmi ${{ secrets.REGISTRY_URL }}/${{ secrets.REGISTRY_USERNAME }}/dm-daemon:nightly
+          docker rmi ${{ secrets.REGISTRY_URL }}/${{ secrets.REGISTRY_USERNAME }}/dm-panel:nightly

@@ -1,0 +1,42 @@
+{
+  "name": "daemon",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "NODE_ENV=dev ts-node --project tsconfig.json src/app.ts",
+    "build": "webpack --config webpack.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@homebridge/node-pty-prebuilt-multiarch": "^0.11.14",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/koa": "^2.15.0",
+    "@types/koa-router": "^7.4.8",
+    "@types/uuid": "^10.0.0",
+    "chokidar": "^3.6.0",
+    "cryptojs": "^2.5.3",
+    "events": "^3.3.0",
+    "js-yaml": "^4.1.0",
+    "koa": "^2.15.3",
+    "koa-body": "^6.0.1",
+    "koa-router": "^12.0.1",
+    "promisify-child-process": "^4.1.2",
+    "socket.io": "^4.7.5",
+    "systeminformation": "^5.22.11",
+    "typescript": "^5.4.5",
+    "uuid": "^10.0.0",
+    "winston": "^3.13.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.14.6",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.3",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0"
+  }
+}

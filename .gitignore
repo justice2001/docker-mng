@@ -10,3 +10,6 @@ tmp
 # Git only
 frontend-dist
 
+config/
+logs/
+dist/

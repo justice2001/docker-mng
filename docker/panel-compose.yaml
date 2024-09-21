@@ -1,0 +1,15 @@
+services:
+  daemon:
+    image: git.mczhengyi.top/zhengyi/dm-panel:nightly
+    container_name: dm-panel
+    restart: always
+    environment:
+      - BASE_PATH=/opt/dm-panel
+    volumes:
+      - /opt/dm-panel:/opt/dm-panel
+      - ./icons/:/apps/public/icons/:ro
+    ports:
+      - 3000:3000
+
+x-dm:
+  protected: true

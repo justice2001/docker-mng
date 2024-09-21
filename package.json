@@ -4,7 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:ui": "cd ui && pnpm dev"
+    "dev:ui": "cd ui && pnpm dev",
+    "dev:panel": "cd panel && pnpm dev",
+    "dev:daemon": "cd daemon && pnpm dev",
+    "build:common": "cd common && pnpm build",
+    "build:ui": "cd ui && pnpm build",
+    "build:panel": "cd panel && pnpm build",
+    "build:daemon": "cd daemon && pnpm build",
+    "nightly:panel": "docker build -t dm-panel:nightly -f docker/panel.DockerFile .",
+    "nightly:daemon": "docker build -t dm-daemon:nightly -f docker/daemon.DockerFile .",
+    "format": "prettier --write \"**/src/**/*.{js,jsx,ts,tsx,css,scss,md}\""
   },
   "keywords": [],
   "author": "",
