@@ -19,6 +19,10 @@
 - 支持自动识别 traefik label，展示域名
 - restful api支持，多数接口采用restful模式开发
 
+# 使用
+
+TODO: 待完善
+
 ## 计划的功能
 
 - [x] 仪表盘

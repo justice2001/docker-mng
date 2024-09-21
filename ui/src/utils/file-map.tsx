@@ -19,7 +19,7 @@ const map: { [key: string]: ReactNode } = {
 
 export default map;
 
-export const supportedEditExt = ['md', 'yaml', 'yml', 'conf', 'env'];
+export const supportedEditExt = ['md', 'yaml', 'yml', 'conf', 'env', 'json', 'css', 'js', 'py'];
 
 export const editLanguages = {
   md: 'markdown',
@@ -27,4 +27,8 @@ export const editLanguages = {
   yml: 'yaml',
   conf: 'yaml',
   env: 'properties',
+  json: 'json',
+  css: 'css',
+  js: 'javascript',
+  py: 'python',
 };
