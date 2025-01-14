@@ -1,0 +1,13 @@
+{
+    "menu.dashboard": "监控",
+    "menu.apps": "应用",
+    "menu.manager": "管理",
+    "menu.stacks": "堆栈",
+    "menu.container": "容器",
+    "menu.image": "镜像",
+    "menu.network": "网络",
+    "menu.volumes": "存储卷",
+    "menu.deploy": "部署",
+    "menu.registry": "注册表",
+    "menu.template": "模板"
+}

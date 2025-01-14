@@ -1,0 +1,13 @@
+{
+    "menu.dashboard": "Dashboard",
+    "menu.apps": "Apps",
+    "menu.manager": "Manager",
+    "menu.stacks": "Stacks",
+    "menu.container": "Containers",
+    "menu.image": "Images",
+    "menu.network": "Network",
+    "menu.volumes": "Volumes",
+    "menu.deploy": "Deploy",
+    "menu.registry": "Registry",
+    "menu.template": "Template"
+}

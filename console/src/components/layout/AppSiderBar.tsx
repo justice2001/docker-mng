@@ -17,6 +17,7 @@ import {
     LucideProps,
     NetworkIcon
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface SidebarItems {
     groupName: string;
@@ -28,62 +29,64 @@ interface SidebarItems {
 }
 
 export function AppSidebar() {
+    const { t } = useTranslation();
+
     const sidebarItems: SidebarItems[] = [
         {
-            groupName: "Dashboard",
+            groupName: t("menu.dashboard"),
             children: [
                 {
-                    name: "Apps",
+                    name: t("menu.apps"),
                     url: "/apps",
                     icon: LayoutPanelLeftIcon
                 },
                 {
-                    name: "Dashboard",
+                    name: t("menu.dashboard"),
                     url: "/",
                     icon: Gauge
                 }
             ]
         },
         {
-            groupName: "Manager",
+            groupName: t("menu.manager"),
             children: [
                 {
-                    name: "Stacks",
+                    name: t("menu.stacks"),
                     url: "/stack",
                     icon: Layers
                 },
                 {
-                    name: "Containers",
+                    name: t("menu.container"),
                     url: "/container",
                     icon: Container
                 },
                 {
-                    name: "Images",
+                    name: t("menu.image"),
                     url: "/images",
                     icon: Disc3Icon
                 },
                 {
-                    name: "Networks",
+                    name: t("menu.network"),
                     url: "/network",
                     icon: NetworkIcon
                 },
                 {
-                    name: "Volumes",
+                    name: t("menu.volumes"),
                     url: "/volume",
                     icon: HardDriveIcon
                 }
             ]
         },
         {
-            groupName: "Deploy",
+            groupName: t("menu.deploy"),
             children: [
                 {
-                    name: "Registry",
+                    name: t("menu.registry"),
                     url: "/registry",
                     icon: LibraryBigIcon
                 },
                 {
-                    name: "Template",
+                    name: t("menu.template"),
                     url: "/template",
                     icon: BookDashedIcon
                 }
