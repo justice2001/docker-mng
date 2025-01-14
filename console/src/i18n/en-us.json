@@ -9,5 +9,15 @@
     "menu.volumes": "Volumes",
     "menu.deploy": "Deploy",
     "menu.registry": "Registry",
-    "menu.template": "Template"
+    "menu.template": "Template",
+    "test": "You click {{n}} times",
+    "general.settings": "System Setting",
+    "general.logout": "Log out",
+    "general.login": "Login",
+    "general.language": "Language",
+    "login.welcome": "Welcome",
+    "login.welcome_desc": "Welcome login docker manager system",
+    "login.username": "Username",
+    "login.password": "Password",
+    "login.forget_password": "Forget Password?"
 }

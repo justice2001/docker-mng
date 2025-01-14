@@ -9,5 +9,14 @@
     "menu.volumes": "存储卷",
     "menu.deploy": "部署",
     "menu.registry": "注册表",
-    "menu.template": "模板"
+    "menu.template": "模板",
+    "general.settings": "系统设置",
+    "general.logout": "退出登陆",
+    "general.login": "登陆",
+    "general.language": "语言",
+    "login.welcome": "欢迎登陆",
+    "login.welcome_desc": "欢迎登陆Docker管理系统",
+    "login.username": "用户名",
+    "login.password": "密码",
+    "login.forget_password": "忘记密码？"
 }

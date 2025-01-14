@@ -18,6 +18,7 @@ import {
     NetworkIcon
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { NavUser } from "./NavUser";
 
 interface SidebarItems {
     groupName: string;
@@ -94,6 +95,12 @@ export function AppSidebar() {
         }
     ]
 
+    const user = {
+        name: "zhengyi59",
+        email: "admin@mczhengyi.top",
+        avatar: ""
+    }
+
     return (
         <Sidebar>
             <SidebarHeader/>
@@ -118,7 +125,9 @@ export function AppSidebar() {
                     </SidebarGroup>
                 ))}
             </SidebarContent>
-            <SidebarFooter/>
+            <SidebarFooter>
+                <NavUser user={user} />
+            </SidebarFooter>
         </Sidebar>
     )
 }
