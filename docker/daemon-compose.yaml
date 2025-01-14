@@ -4,10 +4,10 @@ services:
     container_name: dm-daemon
     restart: always
     environment:
-      - BASE_PATH=/opt/docker
+      - BASE_PATH=/Users/liuzhengyi/docker-mng
       - ENABLE_TRAEFIK=true
     volumes:
-      - /opt/docker:/opt/docker
+      - /Users/liuzhengyi/docker-mng:/Users/liuzhengyi/docker-mng
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 3001:3001
