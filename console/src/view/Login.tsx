@@ -4,9 +4,20 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTranslation } from 'react-i18next';
+import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { LanguagesIcon } from 'lucide-react';
+import { SUPPORTED_LANG } from '@/i18n';
 
 export function Login({ className, ...props }: React.ComponentProps<'div'>) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  console.log(i18n.resolvedLanguage);
+  
+
+  const onLanguageChange = (val: string) => {
+    if (!val) return;
+    i18n.changeLanguage(val)
+  }
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
@@ -36,6 +47,21 @@ export function Login({ className, ...props }: React.ComponentProps<'div'>) {
                   <Button type="submit" className="w-full">
                     {t('general.login')}
                   </Button>
+
+                  <Separator />
+                  <div className='flex justify-center items-center gap-2'>
+                    <Select value={i18n.resolvedLanguage} onValueChange={onLanguageChange}>
+                      <SelectTrigger className="w-[180px]">
+                        <LanguagesIcon size='1rem' />
+                        <SelectValue placeholder="Language" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SUPPORTED_LANG.map(lang => (
+                          <SelectItem value={lang.language}>{lang.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </form>
               <div className="relative hidden bg-muted md:block">

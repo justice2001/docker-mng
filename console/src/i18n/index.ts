@@ -5,18 +5,18 @@ import enUs from './en-us.json';
 import zhCn from './zh-cn.json';
 
 export const SUPPORTED_LANG = [
-    'zh-cn',
-    'en-us',
+    {language: "zh-CN", name: "中文（简体）"},
+    {language: "en-US", name: "English"}
 ];
 
 const option = {
-    fallbackLng: 'zh',
+    fallbackLng: 'zh-CN',
     debug: process.env.NODE_ENV !== 'production',
     resources: {
-        en: {
+        "en-US": {
             translation: enUs,
         },
-        zh: {
+        "zh-CN": {
             translation: zhCn,
         },
     },
