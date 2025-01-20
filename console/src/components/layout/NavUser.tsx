@@ -84,7 +84,7 @@ export function NavUser({
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
                     {SUPPORTED_LANG.map((lang) => (
-                      <DropdownMenuItem onClick={() => i18n.changeLanguage(lang.language)}>{lang.name}</DropdownMenuItem>
+                      <DropdownMenuItem key={lang.language} onClick={() => i18n.changeLanguage(lang.language)}>{lang.name}</DropdownMenuItem>
                     ))}
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>

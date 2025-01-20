@@ -6,6 +6,7 @@ import {
     SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {
+    AlertTriangleIcon,
     BookDashedIcon,
     Container,
     Disc3Icon,
@@ -19,6 +20,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { NavUser } from "./NavUser";
+import { useLocation } from "react-router";
 
 interface SidebarItems {
     groupName: string;
@@ -31,6 +33,7 @@ interface SidebarItems {
 
 export function AppSidebar() {
     const { t } = useTranslation();
+    const location = useLocation();
 
     const sidebarItems: SidebarItems[] = [
         {
@@ -43,7 +46,7 @@ export function AppSidebar() {
                 },
                 {
                     name: t("menu.dashboard"),
-                    url: "/",
+                    url: "/dashboard",
                     icon: Gauge
                 }
             ]
@@ -103,16 +106,16 @@ export function AppSidebar() {
 
     return (
         <Sidebar>
-            <SidebarHeader/>
+            <SidebarHeader></SidebarHeader>
             <SidebarContent>
                 {sidebarItems.map((item) => (
-                    <SidebarGroup>
+                    <SidebarGroup key={item.groupName}>
                         <SidebarGroupLabel>{item.groupName}</SidebarGroupLabel>
                         <SidebarGroupContent>
                             <SidebarMenu>
                                 {item.children.map(menu => (
                                     <SidebarMenuItem key={menu.name}>
-                                        <SidebarMenuButton asChild isActive={"Apps" === menu.name}>
+                                        <SidebarMenuButton asChild isActive={location.pathname.startsWith(menu.url)}>
                                             <a href={menu.url}>
                                                 <menu.icon/>
                                                 <span>{menu.name}</span>
@@ -126,6 +129,12 @@ export function AppSidebar() {
                 ))}
             </SidebarContent>
             <SidebarFooter>
+                {process.env.NODE_ENV === 'development' && (
+                    <div className="text-red-700">
+                        <AlertTriangleIcon className="text-red-700" />
+                        {t('general.developing')}
+                    </div>
+                )}
                 <NavUser user={user} />
             </SidebarFooter>
         </Sidebar>
