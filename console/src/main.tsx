@@ -3,9 +3,10 @@ import { RouterProvider, createBrowserRouter } from "react-router";
 import './index.css'
 import './i18n/index'
 import Layout from './components/layout/Layout';
-import { App } from './view/App';
 import { Login } from './view/Login';
 import { NotFound } from './view/NotFound';
+import { Stacks } from './view/Stacks';
+import { Toaster } from './components/ui/toaster';
 
 const routers = createBrowserRouter([
   {
@@ -17,8 +18,8 @@ const routers = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: "/apps",
-        element: <App />
+        path: "/stack",
+        element: <Stacks />
       }
     ]
   },
@@ -29,5 +30,8 @@ const routers = createBrowserRouter([
 ])
 
 createRoot(document.getElementById('root')!).render(
-  <RouterProvider router={routers} />
+  <>
+    <RouterProvider router={routers} />
+    <Toaster />
+  </>
 )

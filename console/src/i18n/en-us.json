@@ -15,9 +15,14 @@
     "general.logout": "Log out",
     "general.login": "Login",
     "general.language": "Language",
+    "general.developing": "This application is under development and is not a production application!",
     "login.welcome": "Welcome",
     "login.welcome_desc": "Welcome login docker manager system",
     "login.username": "Username",
     "login.password": "Password",
-    "login.forget_password": "Forget Password?"
+    "login.forget_password": "Forget Password?",
+    "stack.stop": "Stop Stacks",
+    "stack.start": "Start Stacks",
+    "stack.web": "Open Web",
+    "stack.detail": "Detail"
 }

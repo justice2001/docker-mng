@@ -14,9 +14,14 @@
     "general.logout": "退出登陆",
     "general.login": "登陆",
     "general.language": "语言",
+    "general.developing": "该应用正处于开发过程中，并非生产应用！",
     "login.welcome": "欢迎登陆",
     "login.welcome_desc": "欢迎登陆Docker管理系统",
     "login.username": "用户名",
     "login.password": "密码",
-    "login.forget_password": "忘记密码？"
+    "login.forget_password": "忘记密码？",
+    "stack.stop": "停止应用",
+    "stack.start": "启动应用",
+    "stack.web": "进入站点",
+    "stack.detail": "详细信息"
 }
