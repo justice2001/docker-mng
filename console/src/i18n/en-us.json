@@ -16,6 +16,8 @@
     "general.login": "Login",
     "general.language": "Language",
     "general.developing": "This application is under development and is not a production application!",
+    "error.request": "Request Failed",
+    "error.unauthorized": "Unauthorized",
     "login.welcome": "Welcome",
     "login.welcome_desc": "Welcome login docker manager system",
     "login.username": "Username",
@@ -24,5 +26,7 @@
     "stack.stop": "Stop Stacks",
     "stack.start": "Start Stacks",
     "stack.web": "Open Web",
-    "stack.detail": "Detail"
+    "stack.detail": "Detail",
+    "stack.have_update": "Updates exist, the latest version is {{version}}",
+    "stack.support_ext": "The application is configured {{ext}}"
 }

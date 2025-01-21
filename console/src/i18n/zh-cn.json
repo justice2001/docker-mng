@@ -15,6 +15,8 @@
     "general.login": "登陆",
     "general.language": "语言",
     "general.developing": "该应用正处于开发过程中，并非生产应用！",
+    "error.request": "请求接口失败！",
+    "error.unauthorized": "未授权，正在跳转至登陆页",
     "login.welcome": "欢迎登陆",
     "login.welcome_desc": "欢迎登陆Docker管理系统",
     "login.username": "用户名",
@@ -23,5 +25,7 @@
     "stack.stop": "停止应用",
     "stack.start": "启动应用",
     "stack.web": "进入站点",
-    "stack.detail": "详细信息"
+    "stack.detail": "详细信息",
+    "stack.have_update": "存在更新，最新版本是 {{version}}",
+    "stack.support_ext": "该应用已配置 {{ext}}"
 }

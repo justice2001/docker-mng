@@ -1,3 +1,5 @@
+import { toast } from '@/hooks/use-toast';
+import i18n from '@/i18n';
 import axios, { Axios, AxiosRequestConfig } from 'axios';
 
 class ApiRequest {
@@ -29,8 +31,18 @@ class ApiRequest {
         setTimeout(() => {
           window.location.href = '/login';
         }, 1000);
+        toast({
+          title: i18n.t('error.request'),
+          description: i18n.t('error.unauthorized'),
+          variant: 'destructive'
+        })
         return;
       }
+      toast({
+        title: i18n.t('error.request'),
+        description: e.response.data.message || e.message,
+        variant: 'destructive'
+      })
       throw e;
     }
   }

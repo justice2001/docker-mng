@@ -27,7 +27,7 @@ export const Stacks = () => {
         setStacks(stacks)
       });
     })
-  })
+  }, [])
 
   return (
     <div>
