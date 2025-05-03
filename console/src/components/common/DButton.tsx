@@ -1,5 +1,5 @@
 import React, {ReactNode} from "react";
-import {Button} from "@/components/ui/button.tsx";
+import {Button, ButtonProps} from "@/components/ui/button.tsx";
 
 interface DButtonProps {
   icon?: ReactNode;
@@ -9,9 +9,9 @@ interface DButtonProps {
   onClick?: () => void;
 }
 
-export const DButton: React.FC<DButtonProps> = (props) => {
+export const DButton: React.FC<DButtonProps & ButtonProps> = (props) => {
   return (
-      <Button variant={props.variant} onClick={props.onClick}>
+      <Button variant={props.variant} onClick={props.onClick} {...props}>
         <div className="flex items-center gap-1">
           {props.icon}
           {props.text || props.children}
