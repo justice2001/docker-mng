@@ -11,6 +11,7 @@ export default defineConfig({
     }
   },
   server: {
+    open: true,
     proxy: {
       '/api': {
         target: 'http://10.0.0.28:4000',

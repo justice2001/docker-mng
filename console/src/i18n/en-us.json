@@ -28,5 +28,9 @@
     "stack.web": "Open Web",
     "stack.detail": "Detail",
     "stack.have_update": "Updates exist, the latest version is {{version}}",
-    "stack.support_ext": "The application is configured {{ext}}"
+    "stack.support_ext": "The application is configured {{ext}}",
+    "operation.up.title": "Starting {{name}}...",
+    "operation.stop.title": "Stoping {{name}}...",
+    "operation.up.desc": "Please wait containers started up...",
+    "operation.stop.desc": "Please wait containers stopped..."
 }

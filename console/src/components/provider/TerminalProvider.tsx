@@ -7,6 +7,7 @@ import '@xterm/xterm/css/xterm.css'
 import { TerminalContext } from "@/context/terminal-context";
 import {io, Socket} from "socket.io-client";
 import ApiRequest from "@/utils/api-request.ts";
+import {useTranslation} from "react-i18next";
 
 let terminal: Terminal | null;
 let socket: Socket | null;
@@ -17,6 +18,7 @@ export const TerminalProvider = ({ children }: {
     children: JSX.Element | JSX.Element[]
 }) => {
     const terminalRef = useRef<HTMLDivElement>(null);
+    const { t } = useTranslation();
 
     const [ terminalData, setTerminalData ] = useState({
         endpoint: "",
@@ -144,8 +146,10 @@ export const TerminalProvider = ({ children }: {
                 <DrawerContent>
                   <div className="px-80 w-full mx-auto">
                     <DrawerHeader>
-                      <DrawerTitle>Starting {terminalData.name}...</DrawerTitle>
-                      <DrawerDescription>Please wait containers started up...</DrawerDescription>
+                      <DrawerTitle>{t(`operation.${terminalData.cmd}.title`, {
+                          name: terminalData.name
+                      })}</DrawerTitle>
+                      <DrawerDescription>{t(`operation.${terminalData.cmd}.desc`)}</DrawerDescription>
                     </DrawerHeader>
                     <div className="px-4 pb-0">
                       <div ref={terminalRef} className="rounded-lg overflow-hidden p-2 bg-black"></div>

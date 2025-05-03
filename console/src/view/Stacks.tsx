@@ -36,6 +36,7 @@ export const Stacks = () => {
     <div>
       <div className="text-xl">{t('menu.stacks')}</div>
       <div className="grid grid-cols-3 gap-3 mt-2">
+        {stacks.length < 1 && <div>Please wait...</div>}
         {stacks.map((item) => (
           <StacksCard stack={item} key={`${item.endpoint}/${item.name}`} onRefresh={loadService} />
         ))}

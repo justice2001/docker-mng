@@ -7,6 +7,7 @@ import { Login } from './view/Login';
 import { NotFound } from './view/NotFound';
 import { Stacks } from './view/Stacks';
 import { Toaster } from './components/ui/toaster';
+import { Stack } from './view/Stack';
 
 const routers = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const routers = createBrowserRouter([
       {
         path: "/stack",
         element: <Stacks />
+      },
+      {
+        path: "/stack/:node/:stack",
+        element: <Stack />
       }
     ]
   },
