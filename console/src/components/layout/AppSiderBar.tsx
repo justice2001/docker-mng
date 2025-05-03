@@ -36,21 +36,21 @@ export function AppSidebar() {
     const location = useLocation();
 
     const sidebarItems: SidebarItems[] = [
-        {
-            groupName: t("menu.dashboard"),
-            children: [
-                {
-                    name: t("menu.apps"),
-                    url: "/apps",
-                    icon: LayoutPanelLeftIcon
-                },
-                {
-                    name: t("menu.dashboard"),
-                    url: "/dashboard",
-                    icon: Gauge
-                }
-            ]
-        },
+        // {
+        //     groupName: t("menu.dashboard"),
+        //     children: [
+        //         {
+        //             name: t("menu.apps"),
+        //             url: "/apps",
+        //             icon: LayoutPanelLeftIcon
+        //         },
+        //         {
+        //             name: t("menu.dashboard"),
+        //             url: "/dashboard",
+        //             icon: Gauge
+        //         }
+        //     ]
+        // },
         {
             groupName: t("menu.manager"),
             children: [
@@ -59,43 +59,43 @@ export function AppSidebar() {
                     url: "/stack",
                     icon: Layers
                 },
-                {
-                    name: t("menu.container"),
-                    url: "/container",
-                    icon: Container
-                },
-                {
-                    name: t("menu.image"),
-                    url: "/images",
-                    icon: Disc3Icon
-                },
-                {
-                    name: t("menu.network"),
-                    url: "/network",
-                    icon: NetworkIcon
-                },
-                {
-                    name: t("menu.volumes"),
-                    url: "/volume",
-                    icon: HardDriveIcon
-                }
+                // {
+                //     name: t("menu.container"),
+                //     url: "/container",
+                //     icon: Container
+                // },
+                // {
+                //     name: t("menu.image"),
+                //     url: "/images",
+                //     icon: Disc3Icon
+                // },
+                // {
+                //     name: t("menu.network"),
+                //     url: "/network",
+                //     icon: NetworkIcon
+                // },
+                // {
+                //     name: t("menu.volumes"),
+                //     url: "/volume",
+                //     icon: HardDriveIcon
+                // }
             ]
         },
-        {
-            groupName: t("menu.deploy"),
-            children: [
-                {
-                    name: t("menu.registry"),
-                    url: "/registry",
-                    icon: LibraryBigIcon
-                },
-                {
-                    name: t("menu.template"),
-                    url: "/template",
-                    icon: BookDashedIcon
-                }
-            ]
-        }
+        // {
+        //     groupName: t("menu.deploy"),
+        //     children: [
+        //         {
+        //             name: t("menu.registry"),
+        //             url: "/registry",
+        //             icon: LibraryBigIcon
+        //         },
+        //         {
+        //             name: t("menu.template"),
+        //             url: "/template",
+        //             icon: BookDashedIcon
+        //         }
+        //     ]
+        // }
     ]
 
     const user = {
