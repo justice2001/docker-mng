@@ -8,6 +8,7 @@ import { NotFound } from './view/NotFound';
 import { Stacks } from './view/Stacks';
 import { Toaster } from './components/ui/toaster';
 import { Stack } from './view/Stack';
+import { DataExplorer } from './view/DataExplorer';
 
 const routers = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const routers = createBrowserRouter([
       {
         path: "/stack/:node/:stack",
         element: <Stack />
+      },
+      {
+        path: "/stack/:node/:stack/data",
+        element: <DataExplorer />
       }
     ]
   },

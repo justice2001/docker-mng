@@ -3,9 +3,9 @@ import {StatusIcon} from '@/components/components/stacks/StatusIcon';
 import {Stacks} from '@/constants/stack-constants';
 import apiRequest from '@/utils/api-request';
 import {borderColor} from '@/utils/stack-utils';
-import {OctagonX, PlayIcon, ServerIcon, TagIcon} from 'lucide-react';
+import {FolderIcon, OctagonX, PlayIcon, ServerIcon, TagIcon} from 'lucide-react';
 import {useEffect, useRef, useState} from 'react';
-import {useParams} from 'react-router';
+import {useNavigate, useParams} from 'react-router';
 import TraefikLogo from '@/assets/platforms/traefik.svg'
 import DockerLogo from '@/assets/docker.svg'
 import {useTranslation} from 'react-i18next';
@@ -19,6 +19,8 @@ let terminal: null | Terminal = null;
 let socket: null | Socket = null;
 
 export function Stack() {
+  const navigate = useNavigate();
+
   const {node, stack} = useParams();
   const {t} = useTranslation();
   const {openLog} = useTerminal();
@@ -153,6 +155,9 @@ export function Stack() {
                 <DButton icon={<PlayIcon/>} onClick={() => operation('up')}>{t("stack.start")}</DButton>}
             {stackInfo?.state === "running" &&
                 <DButton icon={<OctagonX/>} onClick={() => operation('stop')} variant="destructive">{t("stack.stop")}</DButton>}
+            <DButton icon={<FolderIcon />} variant="outline" onClick={() => {
+              navigate(`/stack/${node}/${stack}/data`)
+            }}>{t('stack.explorer')}</DButton>
           </div>
         </div>
         {/* 日志 */}

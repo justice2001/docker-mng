@@ -10,6 +10,7 @@
     "menu.deploy": "部署",
     "menu.registry": "注册表",
     "menu.template": "模板",
+    "general.back": "返回",
     "general.settings": "系统设置",
     "general.logout": "退出登陆",
     "general.login": "登陆",
@@ -27,6 +28,7 @@
     "stack.start": "启动应用",
     "stack.web": "进入站点",
     "stack.detail": "详细信息",
+    "stack.explorer": "数据管理",
     "stack.name": "堆栈名称",
     "stack.node": "节点",
     "stack.have_update": "存在更新，最新版本是 {{version}}",
@@ -35,5 +37,9 @@
     "operation.up.title": "正在启动 {{name}}...",
     "operation.stop.title": "正在停止 {{name}}...",
     "operation.up.desc": "容器正在启动，请稍后...",
-    "operation.stop.desc": "容器正在停止，请稍后..."
+    "operation.stop.desc": "容器正在停止，请稍后...",
+    "explorer.filename": "文件名",
+    "explorer.filesize": "文件大小",
+    "explorer.permission": "文件权限",
+    "explorer.path": "当前路径"
 }

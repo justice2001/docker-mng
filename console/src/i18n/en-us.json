@@ -10,6 +10,7 @@
     "menu.deploy": "Deploy",
     "menu.registry": "Registry",
     "menu.template": "Template",
+    "general.back": "Back",
     "test": "You click {{n}} times",
     "general.settings": "System Setting",
     "general.logout": "Log out",
@@ -28,6 +29,7 @@
     "stack.start": "Start Stacks",
     "stack.web": "Open Web",
     "stack.detail": "Detail",
+    "stack.explorer": "Data Explorer",
     "stack.name": "Stack Name",
     "stack.node": "Node",
     "stack.have_update": "Updates exist, the latest version is {{version}}",
@@ -36,5 +38,9 @@
     "operation.up.title": "Starting {{name}}...",
     "operation.stop.title": "Stoping {{name}}...",
     "operation.up.desc": "Please wait containers started up...",
-    "operation.stop.desc": "Please wait containers stopped..."
+    "operation.stop.desc": "Please wait containers stopped...",
+    "explorer.filename": "File name",
+    "explorer.filesize": "File Size",
+    "explorer.permission": "Permission",
+    "explorer.path": "Current Path"
 }
