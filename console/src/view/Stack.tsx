@@ -28,25 +28,7 @@ export function Stack() {
 
   const [stackInfo, setStackInfo] = useState<Stacks>();
 
-  useEffect(() => {
-    terminal = null;
-    socket = null;
-    getData();
-    connectLog().then(() => {
-      handleResize();
-    })
-
-    return () => {
-      if (terminal) {
-        terminal.clear();
-        terminal = null;
-        socket?.disconnect();
-        socket = null;
-      }
-    }
-  }, []);
-
-  const connectLog = async () => {
+  async function connectLog () {
     if (!terminal && terminalRef.current) {
       terminal = new Terminal({
         fontFamily: 'Menlo, Monaco, "Courier New", monospace',
@@ -98,7 +80,7 @@ export function Stack() {
     terminal.resize(newCols, terminal.rows);
   };
 
-  const getData = () => {
+  function getData() {
     apiRequest.get(`/stacks/${node}/${stack}`).then((res) => {
       setStackInfo(res.data);
     });
@@ -112,12 +94,27 @@ export function Stack() {
     })
   }
 
+  useEffect(() => {
+    terminal = null;
+    socket = null;
+    getData();
+    connectLog().then(() => {
+      handleResize();
+    })
+
+    return () => {
+      if (terminal) {
+        terminal.clear();
+        terminal = null;
+        socket?.disconnect();
+        socket = null;
+      }
+    }
+  }, []);
+
   return (
-      <div className="p-2">
-        <div className="text-2xl font-bold">
-          {node} / {stack}
-        </div>
-        <div className="mt-5 flex items-center">
+      <div>
+        <div className="flex items-center">
           {/* 头像侧 */}
           <StatusIcon status={stackInfo?.state || 'unknown'} icon={stackInfo?.icon || DockerLogo}/>
           <div className="ml-4 flex flex-col gap-1 flex-1">

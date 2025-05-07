@@ -41,7 +41,9 @@ const SelectTrigger = React.forwardRef<
           className={cn("w-full text-left pl-3 pr-10 py-2 truncate")}
           {...props}
       >
-        <span className={cn(`w-full pr-2 truncate`, !props.value && "text-neutral-400")}>{children}</span>
+        {/* <span className={cn(`w-full pr-2 truncate`, !props.value && "text-neutral-400")}>{children}</span> */}
+        {children}
+        {/* {props.value ? children : <span className="text-neutral-400">select</span>} */}
       </SelectPrimitive.Trigger>
       <SelectPrimitive.Icon className={cn(`absolute right-2 cursor-pointer`, !props.value && "pointer-events-none")}>
         {props.value ? <CircleXIcon className="h-4 w-4 opacity-50" onClick={onReset}/> : <ChevronDown className="h-4 w-4 opacity-50 "/>}

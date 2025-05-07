@@ -101,8 +101,10 @@ export function Login({ className, ...props }: React.ComponentProps<'div'>) {
                     <div className="flex justify-center items-center gap-2">
                       <Select value={i18n.resolvedLanguage} onValueChange={onLanguageChange}>
                         <SelectTrigger className="w-[180px]">
-                          <LanguagesIcon size="1rem" />
-                          <SelectValue placeholder="Language" />
+                          <div className="flex items-center gap-1">
+                            <LanguagesIcon size="1rem" />
+                            <SelectValue placeholder="Language" />
+                          </div>
                         </SelectTrigger>
                         <SelectContent>
                           {SUPPORTED_LANG.map((lang) => (
