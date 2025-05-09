@@ -7,17 +7,8 @@ import {
 } from "@/components/ui/sidebar"
 import {
     AlertTriangleIcon,
-    BookDashedIcon,
-    Container,
-    Disc3Icon,
-    Gauge,
-    HardDriveIcon,
     Layers,
-    LayoutPanelLeftIcon,
-    LibraryBigIcon,
-    LucideProps,
-    NetworkIcon
-} from "lucide-react";
+    LucideProps} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { NavUser } from "./NavUser";
 import { useLocation } from "react-router";

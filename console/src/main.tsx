@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client'
-import { RouterProvider, createBrowserRouter } from "react-router";
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router";
 import './index.css'
 import './i18n/index'
 import Layout from './components/layout/Layout';
@@ -9,6 +9,9 @@ import { Stacks } from './view/Stacks';
 import { Toaster } from './components/ui/toaster';
 import { Stack } from './view/Stack';
 import { DataExplorer } from './view/DataExplorer';
+import { Settings } from './view/settings/Settings';
+import { NodeSetting } from './view/settings/NodeSetting';
+import { BasicSetting } from './view/settings/BasicSetting';
 
 const routers = createBrowserRouter([
   {
@@ -30,6 +33,24 @@ const routers = createBrowserRouter([
       {
         path: "/stack/:node/:stack/data",
         element: <DataExplorer />
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
+        children: [
+          {
+            path: "/settings",
+            element: <Navigate to="/settings/basic" />
+          },
+          {
+            path: "/settings/node",
+            element: <NodeSetting />
+          },
+          {
+            path: "/settings/basic",
+            element: <BasicSetting />
+          }
+        ]
       }
     ]
   },

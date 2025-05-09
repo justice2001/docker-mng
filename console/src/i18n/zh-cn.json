@@ -15,6 +15,9 @@
     "general.logout": "退出登陆",
     "general.login": "登陆",
     "general.language": "语言",
+    "general.edit": "编辑",
+    "general.remove": "删除",
+    "general.action": "操作",
     "general.developing": "该应用正处于开发过程中，并非生产应用！",
     "error.request": "请求接口失败！",
     "error.unauthorized": "未授权，正在跳转至登陆页",
@@ -41,5 +44,12 @@
     "explorer.filename": "文件名",
     "explorer.filesize": "文件大小",
     "explorer.permission": "文件权限",
-    "explorer.path": "当前路径"
+    "explorer.path": "当前路径",
+    "setting.node": "节点管理",
+    "setting.basic": "基本设置",
+    "setting.node.status.connected": "已连接",
+    "setting.node.status.disconnected": "已断开",
+    "setting.node.reconnect": "重新连接",
+    "setting.node.name": "节点名称",
+    "setting.node.status": "节点状态"
 }

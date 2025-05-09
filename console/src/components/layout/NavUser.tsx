@@ -19,6 +19,7 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
 import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LANG } from '@/i18n';
+import { useNavigate } from 'react-router';
 
 export function NavUser({
   user,
@@ -31,6 +32,7 @@ export function NavUser({
 }) {
   const { t, i18n } = useTranslation();
   const { isMobile } = useSidebar();
+  const navigate = useNavigate();
 
   return (
     <SidebarMenu>
@@ -72,7 +74,9 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                navigate("/settings")
+              }}>
                 <SettingsIcon />
                 {t('general.settings')}
               </DropdownMenuItem>

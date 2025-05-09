@@ -16,6 +16,9 @@
     "general.logout": "Log out",
     "general.login": "Login",
     "general.language": "Language",
+    "general.edit": "Edit",
+    "general.remove": "Remove",
+    "general.action": "Action",
     "general.developing": "This application is under development and is not a production application!",
     "error.request": "Request Failed",
     "error.unauthorized": "Unauthorized",
@@ -42,5 +45,12 @@
     "explorer.filename": "File name",
     "explorer.filesize": "File Size",
     "explorer.permission": "Permission",
-    "explorer.path": "Current Path"
+    "explorer.path": "Current Path",
+    "setting.node": "Node Setting",
+    "setting.basic": "Basic Setting",
+    "setting.node.status.connected": "Connected",
+    "setting.node.status.disconnected": "Disconnected",
+    "setting.node.reconnect": "Reconnect",
+    "setting.node.name": "Node Name",
+    "setting.node.status": "Node Status"
 }
