@@ -3,7 +3,7 @@ import {StatusIcon} from '@/components/components/stacks/StatusIcon';
 import {Stacks} from '@/constants/stack-constants';
 import apiRequest from '@/utils/api-request';
 import {borderColor} from '@/utils/stack-utils';
-import {FolderIcon, OctagonX, PlayIcon, ServerIcon, TagIcon} from 'lucide-react';
+import {ArrowUpCircleIcon, EditIcon, FolderIcon, MoreHorizontalIcon, OctagonXIcon, PlayIcon, RotateCcwIcon, SaveAllIcon, ServerIcon, TagIcon, TrashIcon, XIcon} from 'lucide-react';
 import {useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from 'react-router';
 import TraefikLogo from '@/assets/platforms/traefik.svg'
@@ -14,6 +14,7 @@ import {useTerminal} from "@/hooks/use-terminal.tsx";
 import {Terminal} from '@xterm/xterm';
 import ApiRequest from "@/utils/api-request";
 import {io, Socket} from "socket.io-client";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 let terminal: null | Terminal = null;
 let socket: null | Socket = null;
@@ -33,7 +34,8 @@ export function Stack() {
       terminal = new Terminal({
         fontFamily: 'Menlo, Monaco, "Courier New", monospace',
         disableStdin: false,
-        fontSize: 14
+        fontSize: 14,
+        rows: 30
       });
       terminal.open(terminalRef.current);
       terminal.write(`Hello ${node}/${stack}!\r\n`);
@@ -151,14 +153,27 @@ export function Stack() {
             {stackInfo?.state !== "running" &&
                 <DButton icon={<PlayIcon/>} onClick={() => operation('up')}>{t("stack.start")}</DButton>}
             {stackInfo?.state === "running" &&
-                <DButton icon={<OctagonX/>} onClick={() => operation('stop')} variant="destructive">{t("stack.stop")}</DButton>}
+                <DButton icon={<XIcon />} onClick={() => operation('stop')} variant="destructive">{t("stack.stop")}</DButton>}
+            <DButton disabled variant='outline' icon={<EditIcon />}>{t("stack.edit")}</DButton>
             <DButton icon={<FolderIcon />} variant="outline" onClick={() => {
               navigate(`/stack/${node}/${stack}/data`)
             }}>{t('stack.explorer')}</DButton>
+            <DButton variant='outline' icon={<SaveAllIcon />} disabled>{t("stack.backup")}</DButton>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <DButton icon={<MoreHorizontalIcon />} variant='outline'>{t("general.more")}</DButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align='end'>
+                <DropdownMenuItem onClick={() => operation('update')}><ArrowUpCircleIcon /> {t("stack.update")}</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => operation('restart')}><RotateCcwIcon /> {t("stack.restart")}</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => operation('down')}><OctagonXIcon /> {t("stack.down")}</DropdownMenuItem>
+                <DropdownMenuItem disabled className='text-red-500'><TrashIcon /> {t("stack.delete")}</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
         {/* 日志 */}
-        <div className="w-[100%] p-2 overflow-hidden bg-black mt-4 rounded-md">
+        <div className="w-[100%] p-2 overflow-hidden bg-black mt-4 rounded-xl">
           <div ref={terminalRef} className="no-scrollbar"></div>
         </div>
       </div>
