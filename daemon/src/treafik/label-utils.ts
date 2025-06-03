@@ -1,4 +1,4 @@
-import logger from 'common/dist/core/logger';
+import { logger } from 'server-common';
 
 /**
  * 通过label列表获取链接

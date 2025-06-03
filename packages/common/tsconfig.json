@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    /* 编译输出 */
+    "target": "ES2017",                  // 编译目标 JS 版本
+    "module": "ESNext",                  // 让 Rollup 管理模块打包
+    "declaration": true,                 // ✅ 生成 .d.ts 类型文件
+    "declarationMap": false,             // 可设为 true 用于调试
+    "emitDeclarationOnly": false,        // 设为 true 则只生成声明
+    "outDir": "dist",                    // 输出目录
+    "sourceMap": true,                   // 生成 .js.map 文件
+    "removeComments": true,              // 去除注释
+
+    /* 模块解析 */
+    "moduleResolution": "node",          // 使用 node 的解析方式
+    "esModuleInterop": true,             // 支持 commonjs 包的默认导入
+    "forceConsistentCasingInFileNames": true,
+
+    /* 严格模式 */
+    "strict": true,                      // 启用所有严格检查
+    "skipLibCheck": true,                // 跳过依赖的类型检查
+
+    /* 路径映射（可选） */
+    "baseUrl": ".",                      // 配合 paths 使用
+    "paths": {
+      "server-common": ["src"]
+    }
+  },
+  "include": ["src/**/*"]
+}

@@ -1,6 +1,6 @@
 import RemoteServer from '../core/remote_server';
 import configuration from '../core/configuration';
-import logger from 'common/dist/core/logger';
+import { logger } from 'server-common';
 
 export type ServerConfig = {
   name: string;

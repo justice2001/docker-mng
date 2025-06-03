@@ -27,7 +27,9 @@
     "systeminformation": "^5.22.11",
     "typescript": "^5.4.5",
     "uuid": "^10.0.0",
-    "winston": "^3.13.0"
+    "winston": "^3.13.0",
+    "common": "workspace:*",
+    "server-common": "workspace:*"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

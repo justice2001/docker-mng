@@ -1,6 +1,6 @@
 import Router from 'koa-router';
 import auth from '../core/auth';
-import logger from 'common/dist/core/logger';
+import { logger } from 'server-common';
 
 const authRouters = new Router({
   prefix: '/auth',

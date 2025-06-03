@@ -13,11 +13,6 @@ export type Stacks = {
   composeFile?: string;
 };
 
-export type Compose = {
-  version: string;
-  services: Record<string, Service>;
-};
-
 export type Service = {
   image: string;
   containerName: string;

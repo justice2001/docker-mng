@@ -1,13 +1,13 @@
-import { StackOperation, Stacks, StackStatus } from 'common/dist/types/stacks';
+import { StackOperation, Stacks, StackStatus } from 'common';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { spawn } from 'promisify-child-process';
 import * as yaml from 'js-yaml';
 import { spawnSync } from 'child_process';
-import logger from 'common/dist/core/logger';
+import { logger } from 'server-common';
 import * as process from 'node:process';
 import { getLabelHost } from '../treafik/label-utils';
-import { dataPath } from 'common/dist/core/base-path';
+import { dataPath } from 'server-common';
 import fileUtils from '../utils/file-utils';
 
 class Stack {

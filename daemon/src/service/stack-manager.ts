@@ -1,9 +1,9 @@
 import Stack from './stack';
-import logger from 'common/dist/core/logger';
-import { Stacks, StackStatus } from 'common/dist/types/stacks';
+import { logger } from 'server-common';
+import { Stacks, StackStatus } from 'common';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import { stackPath } from 'common/dist/core/base-path';
+import { stackPath } from 'server-common';
 import * as child_process from 'node:child_process';
 import chokidar from 'chokidar';
 

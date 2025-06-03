@@ -1,8 +1,7 @@
 import Router from 'koa-router';
 import RemoteManage from '../services/remote-manage';
 import RemoteRequest from '../services/remote_request';
-import { Stacks } from 'common/dist/types/stacks';
-import { SINGLE_AUTH_OPERATION } from 'common/dist/types/auth';
+import { Stacks, SINGLE_AUTH_OPERATION } from 'common';
 
 const stackRouter = new Router({
   prefix: '/stacks',

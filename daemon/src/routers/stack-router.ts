@@ -2,9 +2,9 @@ import { response, routerApp } from '../service/router';
 import StackManager from '../service/stack-manager';
 import SingleUseToken from '../service/single-use-token';
 import { IPty, spawn } from '@homebridge/node-pty-prebuilt-multiarch';
-import logger from 'common/dist/core/logger';
-import { StackOperation } from 'common/dist/types/stacks';
-import { SINGLE_AUTH_OPERATION } from 'common/dist/types/auth';
+import { logger } from 'server-common';
+import { StackOperation } from 'common';
+import { SINGLE_AUTH_OPERATION } from 'common';
 import stackManager from '../service/stack-manager';
 
 routerApp.on('stack/list', async (ctx) => {

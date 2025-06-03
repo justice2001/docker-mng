@@ -1,5 +1,5 @@
 import configService from './config-service';
-import logger from 'common/dist/core/logger';
+import { logger } from 'server-common';
 
 class AuthService {
   authList: string[] = [];

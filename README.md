@@ -23,6 +23,14 @@
 
 TODO: 待完善
 
+## 项目结构
+
+- common 共用部分
+- server-common 服务端共用
+- console 新版本前端
+- daemon docker管理端
+- panel daemon管理器
+
 ## 计划的功能
 
 - [x] 仪表盘

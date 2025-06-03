@@ -1,7 +1,7 @@
 import { io, Socket } from 'socket.io-client';
-import { NodeData } from 'common/dist/types/daemon';
+import { NodeData } from 'common';
 import RemoteRequest from '../services/remote_request';
-import logger from 'common/dist/core/logger';
+import { logger } from 'server-common';
 
 /**
  * 远程服务器，用于连接 daemon，并向 daemon 发送指令

@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import { ServerConfig } from '../services/remote-manage';
-import logger from 'common/dist/core/logger';
-import { configPath, panelConfig } from 'common/dist/core/base-path';
+import { logger } from 'server-common';
+import { configPath, panelConfig } from 'server-common';
 import { generateSecrets } from '../utils/random-utils';
 
 export type ConfigurationData = {

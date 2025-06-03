@@ -1,7 +1,7 @@
 import * as process from 'node:process';
 import * as fs from 'node:fs';
-import logger from 'common/dist/core/logger';
-import { configPath, daemonConfig } from 'common/dist/core/base-path';
+import { logger } from 'server-common';
+import { configPath, daemonConfig } from 'server-common';
 import * as crypto from 'node:crypto';
 
 type Configuration = {

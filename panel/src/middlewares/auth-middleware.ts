@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import logger from 'common/dist/core/logger';
+import { logger } from 'server-common';
 import auth from '../core/auth';
 
 export const authMiddleware: Koa.Middleware<Koa.DefaultState, Koa.DefaultContext, any> = async (ctx, next) => {

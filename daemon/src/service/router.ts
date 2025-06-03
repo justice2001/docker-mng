@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events';
 import { RouterCtx } from '../entities/ctx';
 import { Socket } from 'socket.io';
-import { IPacket } from 'common/dist/types/community';
-import logger from 'common/dist/core/logger';
+import { IPacket } from 'common';
+import { logger } from 'server-common';
 import authService from './auth-service';
 
 /**

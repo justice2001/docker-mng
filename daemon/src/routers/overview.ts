@@ -1,6 +1,6 @@
 import { response, routerApp } from '../service/router';
 import { getSystemInfo } from '../service/system_info';
-import { NodeInfo } from 'common/dist/types/daemon';
+import { NodeInfo } from 'common';
 
 import * as pty from '@homebridge/node-pty-prebuilt-multiarch';
 import SingleUseToken from '../service/single-use-token';
@@ -9,7 +9,7 @@ import { daemonVersion, dockerVersion } from '../app';
 import StackManager from '../service/stack-manager';
 import * as process from 'node:process';
 import * as child_process from 'node:child_process';
-import logger from 'common/dist/core/logger';
+import { logger } from 'server-common';
 import * as path from 'node:path';
 
 routerApp.on('info', async (ctx) => {
