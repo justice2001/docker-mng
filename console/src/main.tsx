@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client'
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router";
 import './index.css'
 import './i18n/index'
+import ace from "ace-builds/src-noconflict/ace";
 import Layout from './components/layout/Layout';
 import { Login } from './view/Login';
 import { NotFound } from './view/NotFound';
@@ -59,6 +60,8 @@ const routers = createBrowserRouter([
     element: <NotFound />
   }
 ])
+
+ace.config.set("basePath", "/node_modules/ace-builds/src-noconflict/");
 
 createRoot(document.getElementById('root')!).render(
   <>

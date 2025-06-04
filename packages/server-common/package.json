@@ -1,0 +1,23 @@
+{
+  "name": "server-common",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.cjs.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^26.0.3",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/node": "^22.15.29",
+    "rollup": "^4.41.1",
+    "typescript": "^5.8.3",
+    "winston": "^3.13.0"
+  }
+}

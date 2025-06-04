@@ -1,9 +1,11 @@
-import { FileItem } from '@/constants/file-constants';
+import { FileItem } from 'common';
 import { formatFileSize, normalizePath } from '@/utils/path-utils';
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { FileIcon } from './FileIcon';
 import { useTranslation } from 'react-i18next';
+import {DataEditor} from "@/components/editor/DataEditor.tsx";
+import {useDataEditor} from "@/components/editor/useDataEditor.ts";
 
 interface FileExplorerProps {
   list: FileItem[];
@@ -11,20 +13,27 @@ interface FileExplorerProps {
   onRoute?: (path: string) => void;
 }
 
+let lastClickTime = -1;
+
 export const FileExplorer: React.FC<FileExplorerProps> = (props: FileExplorerProps) => {
   const { t } = useTranslation();
+  const editor = useDataEditor();
 
   const [selectedFile, setSelectedFile] = useState<string>('');
 
   const fileClick = (file: FileItem) => {
-    if (file.name !== selectedFile) {
+    const now = Date.now();
+    console.log(now, lastClickTime)
+    if (file.name !== selectedFile || now - lastClickTime > 300 ) {
       setSelectedFile(file.name);
+      lastClickTime = now;
       return;
     }
+    const p = normalizePath(`${props.path}/${file.name}`);
     if (file.type === 'file') {
       // Do file preview
+      editor.openEditor(p);
     } else {
-      const p = normalizePath(`${props.path}/${file.name}`);
       setSelectedFile('');
       props.onRoute?.(p);
     }
@@ -32,6 +41,7 @@ export const FileExplorer: React.FC<FileExplorerProps> = (props: FileExplorerPro
 
   return (
     <>
+      <DataEditor editor={editor} />
       <Table>
         <TableHeader>
           <TableRow className="border-none">
