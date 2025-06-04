@@ -1,6 +1,6 @@
 import {DTooltip} from '@/components/common/DTooltip';
 import {StatusIcon} from '@/components/components/stacks/StatusIcon';
-import {Stacks} from '@/constants/stack-constants';
+import {Stacks} from 'common';
 import apiRequest from '@/utils/api-request';
 import {borderColor} from '@/utils/stack-utils';
 import {ArrowUpCircleIcon, EditIcon, FolderIcon, MoreHorizontalIcon, OctagonXIcon, PlayIcon, RotateCcwIcon, SaveAllIcon, ServerIcon, TagIcon, TrashIcon, XIcon} from 'lucide-react';

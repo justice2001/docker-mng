@@ -1,7 +1,7 @@
 import { DButton } from "@/components/common/DButton";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { NodeData } from "@/constants/stack-constants";
+import { NodeData } from "common";
 import apiRequest from "@/utils/api-request";
 import { EditIcon, LinkIcon, ServerIcon, TrashIcon, UnlinkIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";

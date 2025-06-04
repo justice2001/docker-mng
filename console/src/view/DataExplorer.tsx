@@ -1,6 +1,6 @@
 import { DButton } from "@/components/common/DButton";
 import { FileExplorer } from "@/components/components/explorer/FileExplorer";
-import { FileItem } from "@/constants/file-constants";
+import { FileItem } from "common";
 import apiRequest from "@/utils/api-request";
 import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";

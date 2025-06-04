@@ -1,5 +1,5 @@
 import { StacksCard } from '@/components/components/stacks/StackCard';
-import { NodeData, Stacks as Stack } from '@/constants/stack-constants';
+import { NodeData, Stacks as Stack } from 'common';
 import apiRequest from '@/utils/api-request';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
